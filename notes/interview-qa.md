@@ -63,3 +63,15 @@ A: My row splitter found 516 rows in Schedule I but 0 in Schedule II. I printed 
 
 **Q: How do you know your parsing is correct?**
 A: I compare row counts per schedule against totals verified with a second tool and a manual check of the last serial numbers. This caught a bug in my own pattern, where entry-level explanations were treated as the end of the table and 75 rows in one schedule disappeared. The check printed MISMATCH, so I found it immediately.
+
+**Q: What does your app say for "GST on ginger"?**
+A: There isn't one answer. Fresh ginger is exempt (notification 10/2025, entry 60) and other ginger is 5% (9/2025, entry 42). Retrieval returns both rows, and the answer step explains the difference and cites each. Keyword search alone also matched "Grapes, fresh" because of the word "fresh", which is why I plan semantic search and a re-check on the final answer.
+
+**Q: Have you used LangChain?**
+A: Yes, after building the pipeline by hand. I rebuilt retrieval and answer generation with LangChain and compared both on the same evaluation set. (Fill in the numbers once measured.) Building it manually first meant I knew what each LangChain component was replacing.
+
+**Q: RAG or fine-tuning?**
+A: RAG for knowledge, because tax rules change and every answer needs a source. Fine-tuning changes behavior, not facts that stay current, and it cannot cite. I would fine-tune only a small classifier or the embedding model, and only after the evaluation shows a gap.
+
+**Q: How do you monitor it?**
+A: Every request is logged with the retrieved cards, guards, latency, tokens, cost and feedback. A dashboard shows volume, latency, cost, not-found and thumbs-down rates, plus a document-freshness check, because stale documents are the biggest risk for a tax assistant.

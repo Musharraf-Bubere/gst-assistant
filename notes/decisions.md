@@ -121,3 +121,22 @@ Add a new entry whenever I choose between options or change a decision.
 - Chose: every record has treatment = taxable or exempt. For exempt records the rate fields are empty.
 - Why: exempt, nil-rated and zero-rated differ in input tax credit. Showing "0%" for an exemption would be wrong and would mislead.
 - Revisit: when the nil-rated entries in 9/2025 and zero-rated supplies (exports) are added, they will need their own treatment values.
+
+## D21. Build the pipeline manually first, then a LangChain twin (Oct 2026)
+- Chose: version 1 by hand; after evaluation and deployment, rebuild the retrieval and answer pipeline with LangChain and compare on the same evaluation set.
+- Why: I understand each step because I wrote it. The comparison gives evidence, not opinion, about what the framework saves and hides.
+- Plan (revised): build the twin from the loader onward, compare stage by stage (parse/chunk, retrieval, answer), then end to end. Freeze the evaluation set first. Same documents, embedding model, LLM settings, prompt and top-k on both sides. Pin versions. Record effort as well as accuracy.
+- Rules: finish and deploy v1 first, start from the same records.json, keep the twin in experiments/langchain/, time-box to about a week.
+
+## D22. Guardrails and evaluation built by hand first (Oct 2026)
+- Chose: rule-based input checks, not-found guard, strict prompt, citation check, number check and disclaimer. Evaluation with 30-50 questions: lookups, traps, exclusions, not-found, off-topic and injection attempts. Exact-match scoring first.
+- Why: I can explain every check. Tax answers need deterministic checks.
+- Later: try Ragas/DeepEval and a guardrails library on the same questions and compare with my own.
+
+## D23. Observability and monitoring (Oct 2026)
+- Chose: log every request to SQLite (question, retrieved ids and scores, guards fired, answer, citations, latency, tokens, cost, errors, feedback). A Streamlit page shows volume, latency, cost, not-found rate, refusals, thumbs-down and errors. Plus a document-freshness check.
+- Later: try a tracing tool (LangSmith, Langfuse or Phoenix) after reading its current documentation.
+
+## D24. No fine-tuning in version 1 (Oct 2026)
+- Chose: RAG for knowledge. Rules change often and answers need citations, which fine-tuning cannot give.
+- Revisit: if evaluation shows a behavior or classification gap, or if retrieval needs better embeddings. Candidates are a small question classifier and an embedding model. Compare on the same evaluation set.
