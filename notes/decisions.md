@@ -55,9 +55,50 @@ Add a new entry whenever I choose between options or change a decision.
 
 ## D9. PDF parser: PyMuPDF vs Docling (Oct 2026, OPEN)
 - Plan: test PyMuPDF on real table pages. If rows break, test Docling on the same pages and compare.
-- Decision: (fill in after testing, with the evidence)
+- Decision (provisional): PyMuPDF. On 9/2025 page 2 it keeps serial number, code and description in row order. Known issues to handle in the chunker: rows continue across pages, descriptions wrap, codes are not uniform, and the rate comes from the schedule heading. Revisit Docling if other tables come out scrambled.
 
 ## D10. Documents stored in the repository (Oct 2026)
 - Chose: commit the public PDFs to GitHub.
 - Why: small public documents, and anyone can run the project after cloning.
 - Revisit: if the document set grows too large.
+
+## D11. Keep core pipeline separate from GST-specific parts (Oct 2026)
+- Chose: reusable code in core/, GST parsers, metadata, prompts, guardrails and test questions in domains/gst/.
+- Considered: one flat codebase, or building a fully generic tool first.
+- Why: lets me swap in other documents later without rewriting retrieval, API or evaluation.
+- Trade-off: slightly more folders now. I will not generalise further until the GST version is working and measured.
+
+## D12. Roadmap beyond version 1 (Oct 2026)
+- v1: single-question RAG over goods, with guardrails, evaluation, deployment.
+- v1.5: chatbot with conversation memory and clarifying questions.
+- v2: services (base notification + amendments), LangGraph routing, LangSmith tracing.
+- v3: agent with tools (rate lookup, calculator, "what changed between dates").
+- v4: scale, with a watcher that ingests new notifications and flags changes.
+- Rule: add agent behaviour only where a fixed workflow is not enough.
+
+## D13. MCP: not in version 1 (Oct 2026)
+- Chose: plain Python functions for retrieval and calculation in v1.
+- Considered: building an MCP server from the start.
+- Why: only my own app calls these functions, so MCP would add a server to build and run without solving a problem.
+- Revisit: in v3, expose search_rates, calculate_gst and compare-dates as an MCP server so other AI apps can use them.
+
+## D14. Schedule headings detected with a regex (Oct 2026)
+- Chose: a line is a schedule heading only if it has "Schedule", a Roman numeral, a dash and a percentage. This ignores in-text references like "Schedule I of this notification".
+- Why: a plain "starts with Schedule" check found 11 lines, only 7 were real headings.
+- Note: the heading rate is the CGST rate, so the GST rate is 2x (stored as a separate field, with the source noted).
+
+## D15. Validate the parser with counts, not by eye (Oct 2026)
+- Chose: after splitting rows, check that serial numbers in each schedule run 1..n with no gaps, and read the last row of each schedule.
+- Why: a parser can look right on one page and silently lose or merge rows elsewhere.
+
+## D16. Row counts verified two ways (Oct 2026)
+- Chose: split rows by schedule, then cross-checked counts with a second tool and a manual check of the last serial numbers.
+- Result: 1,195 rows in 9/2025 (516, 640, 13, 15, 3, 2, 6), matching in both tools.
+- Known remaining issue: annexure lists and the closing Explanation get attached to the last row of a schedule. They must be separated.
+
+## D17. Annexures and closing explanations are separate chunks (Oct 2026)
+- Chose: when a line starts "List n [See S. No. n" or "Explanation.—", stop the current row and store the text separately.
+- Why: annexure lists belong to a specific entry (for example List 1 belongs to S. No. 478), and the closing explanation applies to the whole notification, so neither is part of the last rate row.
+- Safety net: the script checks row counts per schedule against known totals (516, 640, 13, 15, 3, 2, 6) and prints MISMATCH if they change.
+- Bug found by my own check: my first pattern treated every "Explanation.-" as the end of the rows. Many entries have their own explanation ("For the purposes of this entry"), so rows were swallowed and the counts dropped (I: 441 instead of 516). Fixed by matching only "For the purposes of this notification".
+- Lesson: the expected-count check caught it within seconds. Without it, the data would have looked fine and been silently wrong.
