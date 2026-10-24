@@ -55,7 +55,7 @@ Add a new entry whenever I choose between options or change a decision.
 
 ## D9. PDF parser: PyMuPDF vs Docling (Oct 2026, OPEN)
 - Plan: test PyMuPDF on real table pages. If rows break, test Docling on the same pages and compare.
-- Decision (provisional): PyMuPDF. On 9/2025 page 2 it keeps serial number, code and description in row order. Known issues to handle in the chunker: rows continue across pages, descriptions wrap, codes are not uniform, and the rate comes from the schedule heading. Revisit Docling if other tables come out scrambled.
+- Decision: PyMuPDF. On notification 9/2025 it keeps rows in order, and with my splitter all 7 schedules match the verified row counts (1,195 rows). I did not need Docling. Revisit if other notifications (services, IGST) come out scrambled.
 
 ## D10. Documents stored in the repository (Oct 2026)
 - Chose: commit the public PDFs to GitHub.
