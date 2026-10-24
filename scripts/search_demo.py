@@ -3,7 +3,7 @@ import re
 
 from rank_bm25 import BM25Okapi
 
-with open("data/processed/rates_09-2025.json", encoding="utf-8") as file:
+with open("data/processed/records.json", encoding="utf-8") as file:
     records = json.load(file)
 
 
@@ -21,7 +21,13 @@ def search(query, top_k=3):
     return [records[i] for i in ranked[:top_k] if scores[i] > 0]
 
 
-for query in ["pan masala", "live horses", "2401", "ginger"]:
+def show_rate(record):
+    if record["treatment"] == "exempt":
+        return "exempt"
+    return str(record["gst_rate"]) + "%"
+
+
+for query in ["pan masala", "2401", "ginger", "fresh ginger", "tomatoes"]:
     print("QUERY:", query)
     for record in search(query):
-        print("  ", record["gst_rate"], "% |", record["id"], "|", record["hsn_text"][:25], "|", record["description"][:50])
+        print("  ", show_rate(record), "|", record["id"], "|", record["hsn_text"][:25], "|", record["description"][:50])

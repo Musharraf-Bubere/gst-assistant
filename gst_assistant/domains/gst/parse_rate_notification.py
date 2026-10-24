@@ -12,8 +12,9 @@ HEADING = re.compile(r"^Schedule\s*([IVX]+)\s*[\u2013\-]\s*([\d.]+)\s*%")
 SERIAL = re.compile(r"^(\d+)\.(?:\s+(.*))?$")
 LIST_START = re.compile(r"^List\s*(\d+)\s*\[\s*See\s+S\.\s*No\.\s*(\d+)")
 EXPLANATION_START = re.compile(
-    r"^Explanation\.\s*[\u2014\u2013\-]\s*For the purposes? of this notification"
+    r"^Explanation\.\s*[\u2014\u2013\-]\s*For the purposes? of this (?:notification|Schedule)"
 )
+ANNEXURE_START = re.compile(r"^Annexure\s*[\u2013\u2014\-]\s*([IVX]+)")
 
 
 def read_lines(pdf_path):
@@ -28,8 +29,13 @@ def read_lines(pdf_path):
     return lines
 
 
-def split_rows(lines):
-    """Walk the lines once and group them into rows and trailers."""
+def split_rows(lines, table_start=None, table_schedule="-", table_cgst_rate=0.0):
+    """Group lines into rows and trailers.
+
+    Notifications with rate headings (like 9/2025) need no options.
+    Notifications with one plain table (like 10/2025) pass table_start,
+    a pattern for the line just before row 1.
+    """
     rows = []
     trailers = []
     schedule = None
@@ -46,11 +52,17 @@ def split_rows(lines):
             trailer = None
             expected = 1
             continue
+        if table_start and schedule is None and table_start.match(line):
+            schedule = table_schedule
+            cgst_rate = table_cgst_rate
+            expected = 1
+            continue
         if schedule is None:
             continue
         list_start = LIST_START.match(line)
-        if list_start or EXPLANATION_START.match(line):
-            kind = "annexure" if list_start else "explanation"
+        annexure_start = ANNEXURE_START.match(line)
+        if list_start or annexure_start or EXPLANATION_START.match(line):
+            kind = "annexure" if (list_start or annexure_start) else "explanation"
             trailer = {"schedule": schedule, "kind": kind, "parts": [line]}
             trailers.append(trailer)
             current = None
@@ -75,8 +87,8 @@ def split_rows(lines):
     return rows, trailers
 
 
-def parse_notification(pdf_path):
-    return split_rows(read_lines(pdf_path))
+def parse_notification(pdf_path, **options):
+    return split_rows(read_lines(pdf_path), **options)
 
 
 CODE_WORDS = {"or", "and", "to", "any", "other", "chapter", "heading", "except"}

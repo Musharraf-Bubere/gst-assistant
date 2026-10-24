@@ -116,3 +116,8 @@ Add a new entry whenever I choose between options or change a decision.
 - Chose: the bracket note stays inside hsn_text, exactly as in the notification.
 - Why: it limits the entry. 0910 [other than 0910 11 10, 0910 30 10] does not cover fresh ginger or turmeric. Dropping it would give wrong answers.
 - Revisit: extract exclusions into their own field so search can filter on them.
+
+## D20. Exempt is stored as a treatment, not as a 0% rate (Oct 2026)
+- Chose: every record has treatment = taxable or exempt. For exempt records the rate fields are empty.
+- Why: exempt, nil-rated and zero-rated differ in input tax credit. Showing "0%" for an exemption would be wrong and would mislead.
+- Revisit: when the nil-rated entries in 9/2025 and zero-rated supplies (exports) are added, they will need their own treatment values.

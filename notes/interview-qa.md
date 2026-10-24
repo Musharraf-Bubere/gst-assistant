@@ -31,6 +31,12 @@ A: For exact lookups a table is more reliable, and I may add one in version 2. B
 **Q: PyMuPDF or LangChain loaders?**
 A: They aren't alternatives. PyMuPDF reads the PDF, and LangChain's loader can wrap it. The real choice was between my own structure-aware splitting and a generic character splitter. The rate is in the schedule heading, far from the row, so a generic splitter would lose it. I wrote my own row parser and verified it with row counts.
 
+**Q: Why isn't the HSN code enough to find the rate?**
+A: The same heading can have different rates depending on the description. In notification 9/2025, heading 2401 appears at 5% for tobacco leaves (Schedule I) and at 28% for unmanufactured tobacco (Schedule VII). Matching on the code alone gives the wrong rate, so retrieval returns candidates and the answer step compares descriptions and conditions.
+
+**Q: What are the limits of keyword search?**
+A: It matches words, not meaning. For "ginger" it returned the row "Ginger other than fresh ginger" at 5%. Fresh ginger is actually exempt under notification 10/2025. That is why I am adding the exemption notification, semantic search, guardrails and trap questions in my evaluation set.
+
 ## Domain gotchas I found
 **Q: What surprised you in the source documents?**
 A: The CGST notification lists half rates (2.5%, 9%, 20%), while users ask for the full GST rate (5%, 18%, 40%). The IGST notification has the full rate, so I use it as the main source and CGST to cross-check.
