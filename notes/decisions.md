@@ -102,3 +102,17 @@ Add a new entry whenever I choose between options or change a decision.
 - Safety net: the script checks row counts per schedule against known totals (516, 640, 13, 15, 3, 2, 6) and prints MISMATCH if they change.
 - Bug found by my own check: my first pattern treated every "Explanation.-" as the end of the rows. Many entries have their own explanation ("For the purposes of this entry"), so rows were swallowed and the counts dropped (I: 441 instead of 516). Fixed by matching only "For the purposes of this notification".
 - Lesson: the expected-count check caught it within seconds. Without it, the data would have looked fine and been silently wrong.
+
+## D18. Own row parser instead of a generic loader and splitter (Oct 2026)
+- Chose: PyMuPDF for text, my own code for rows, schedules and annexures.
+- Considered: LangChain document loader plus a character-based text splitter.
+- Why: the rate lives in the schedule heading, rows continue across pages, and annexures belong to specific entries. A generic splitter cuts by length and loses all three.
+- Trade-off: more code to write and test, covered by the row-count checks.
+- Revisit: use a generic splitter only for very long explanation text, after rate and code are attached.
+- Correction (Oct 2026): LangChain is not limited to generic splitters. Header-based splitting after a Markdown conversion, or LLM extraction, could also work. I chose my own parser because it is deterministic, free, verifiable with row counts, and explainable.
+- Experiment to run later: Markdown conversion + MarkdownHeaderTextSplitter on the same PDF, compared on row counts and whether the rate and [other than ...] notes survive.
+
+## D19. Keep "[other than ...]" notes in the code field as written (Oct 2026)
+- Chose: the bracket note stays inside hsn_text, exactly as in the notification.
+- Why: it limits the entry. 0910 [other than 0910 11 10, 0910 30 10] does not cover fresh ginger or turmeric. Dropping it would give wrong answers.
+- Revisit: extract exclusions into their own field so search can filter on them.

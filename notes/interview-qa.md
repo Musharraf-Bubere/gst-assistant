@@ -28,6 +28,9 @@ A: (Fill in after testing both parsers on the real notifications.)
 **Q: Couldn't you just use a database of rates instead of RAG?**
 A: For exact lookups a table is more reliable, and I may add one in version 2. But the notifications also contain conditions, exceptions and cross-references, for example a rate that is 2.5% only if input credit is not taken. That is text, so retrieval plus an LLM with citations fits it. The best design combines both.
 
+**Q: PyMuPDF or LangChain loaders?**
+A: They aren't alternatives. PyMuPDF reads the PDF, and LangChain's loader can wrap it. The real choice was between my own structure-aware splitting and a generic character splitter. The rate is in the schedule heading, far from the row, so a generic splitter would lose it. I wrote my own row parser and verified it with row counts.
+
 ## Domain gotchas I found
 **Q: What surprised you in the source documents?**
 A: The CGST notification lists half rates (2.5%, 9%, 20%), while users ask for the full GST rate (5%, 18%, 40%). The IGST notification has the full rate, so I use it as the main source and CGST to cross-check.
