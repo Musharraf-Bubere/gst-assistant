@@ -75,3 +75,6 @@ A: RAG for knowledge, because tax rules change and every answer needs a source. 
 
 **Q: How do you monitor it?**
 A: Every request is logged with the retrieved cards, guards, latency, tokens, cost and feedback. A dashboard shows volume, latency, cost, not-found and thumbs-down rates, plus a document-freshness check, because stale documents are the biggest risk for a tax assistant.
+
+**Q: How would you switch from Gemini to another model?**
+A: All model calls go through one small interface, generate(system, prompt), which returns the text and token counts. Switching means writing one new class for the provider and changing LLM_PROVIDER in .env. Retrieval, API and evaluation don't change.
