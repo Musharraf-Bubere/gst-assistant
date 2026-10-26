@@ -46,3 +46,7 @@ def answer_question(question, index, llm, top_k=5):
     prompt = "CARDS:\n\n" + cards + "\n\nQUESTION: " + question
     result = llm.generate(SYSTEM_PROMPT, prompt)
     return result.text, [record["id"] for record, score in hits]
+
+
+def embed_text(record):
+    return record["hsn_text"] + " " + record["description"][:1000]

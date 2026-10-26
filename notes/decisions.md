@@ -140,3 +140,15 @@ Add a new entry whenever I choose between options or change a decision.
 ## D24. No fine-tuning in version 1 (Oct 2026)
 - Chose: RAG for knowledge. Rules change often and answers need citations, which fine-tuning cannot give.
 - Revisit: if evaluation shows a behavior or classification gap, or if retrieval needs better embeddings. Candidates are a small question classifier and an embedding model. Compare on the same evaluation set.
+
+## D25. Baseline: keyword search only (Oct 2026)
+- Retrieval hit rate on the first 7 lookup questions: 6 of 7 (BM25 keyword search, top 5).
+- Miss: "spaceship" never matches "spacecraft" (10/2025 entry 159), because keyword search compares exact words.
+- Next: add semantic search with local embeddings and compare on the same questions.
+
+## D26. Local embeddings first (fastembed, bge-small), compare with Gemini later (Oct 2026)
+- Chose: BAAI/bge-small-en-v1.5 through fastembed for version 1 retrieval.
+- Why: free, no rate limits, reproducible (the model file does not change under me), no network dependency for search, light to deploy, easy to explain.
+- Trade-offs: possibly lower quality than a hosted model, short input window, English only.
+- Rule: cards and queries must use the same embedding model, so switching means rebuilding the vectors.
+- Plan: put embeddings behind a small interface, add a Gemini embedder, and compare hit rate, speed and cost on the same evaluation set.

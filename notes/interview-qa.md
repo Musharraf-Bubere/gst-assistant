@@ -78,3 +78,9 @@ A: Every request is logged with the retrieved cards, guards, latency, tokens, co
 
 **Q: How would you switch from Gemini to another model?**
 A: All model calls go through one small interface, generate(system, prompt), which returns the text and token counts. Switching means writing one new class for the provider and changing LLM_PROVIDER in .env. Retrieval, API and evaluation don't change.
+
+**Q: Tell me about a failure of your system.**
+A: A user asked about the GST on a "spaceship". The notification says "spacecraft", so keyword search found nothing and the app answered "not found", when the real answer is exempt (10/2025, entry 159). It didn't invent an answer, but it missed one. I added it to my evaluation set as a failing case and I'm fixing it with semantic search, then measuring the hit rate before and after.
+
+**Q: Why a local embedding model and not an API?**
+A: For version 1 I wanted reproducible evaluation and zero cost. A local model file doesn't change, so my retrieval scores stay comparable over time. I plan to compare it with a hosted embedding model on the same test set and choose by the numbers. Queries and documents must use the same model, so switching means re-embedding everything.
