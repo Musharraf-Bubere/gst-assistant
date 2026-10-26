@@ -158,3 +158,12 @@ Add a new entry whenever I choose between options or change a decision.
 - Limit: 7 easy questions cannot separate the methods. Extended to 20 lookup questions with everyday wording, an exact code, and a typo.
 - Rule: expected ids come from the PDF, not from the app's own search, to avoid testing the search against itself.
 - Note: fastembed downloaded the quantized (smaller) ONNX version of bge-small-en-v1.5.
+
+## D28. Hybrid search with Reciprocal Rank Fusion (Oct 2026)
+- Evidence before: on 19 lookup questions keyword scored 15 and vector 16, and they missed different questions. Keyword failed on different wording (spaceship/spacecraft, electricity/electrical energy, prasad/prasadam). Vector failed on an exact code and on one card with many items (roti and chapati).
+- Chose: combine both rankings with RRF (1 / (60 + rank)), taking the top 20 from each.
+- Why: rank positions are comparable, but BM25 and similarity scores are not.
+- Known gap: typos (q22). Fix later with fuzzy matching or query rewriting.
+- Result on 19 lookup questions: keyword 15, vector 16, hybrid 17. Hybrid fixed 5 questions one method had missed, but missed q19 (electricity), which vector had found.
+- My prediction was 18 of 19. It was wrong. RRF rewards cards that appear on both lists, so two weak votes can outrank one strong vote.
+- Next: look at the position of the right card for the misses, then try weights, more cards to the LLM, a re-ranker or query rewriting, and compare on the same set.

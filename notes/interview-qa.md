@@ -84,3 +84,9 @@ A: A user asked about the GST on a "spaceship". The notification says "spacecraf
 
 **Q: Why a local embedding model and not an API?**
 A: For version 1 I wanted reproducible evaluation and zero cost. A local model file doesn't change, so my retrieval scores stay comparable over time. I plan to compare it with a hosted embedding model on the same test set and choose by the numbers. Queries and documents must use the same model, so switching means re-embedding everything.
+
+**Q: Why hybrid search?**
+A: On my evaluation set the two methods failed on different questions. Keyword search missed synonyms (spaceship vs spacecraft), while vector search missed an exact HSN code. I combined them with Reciprocal Rank Fusion, which uses rank positions because BM25 and cosine scores are on different scales. (Fill in the hybrid score once measured.)
+
+**Q: Did hybrid search improve things?**
+A: Yes, from 15 (keyword) and 16 (vector) to 17 of 19 on my test set. But it made one question worse than vector alone: "tax on electricity". With RRF two weak votes for a wrong card can beat one strong vote for the right card. I'm measuring weights, more retrieved cards and re-ranking rather than guessing. The test set is small, so a one-question change is 5%, and I'm growing it.

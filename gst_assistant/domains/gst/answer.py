@@ -50,3 +50,12 @@ def answer_question(question, index, llm, top_k=5):
 
 def embed_text(record):
     return record["hsn_text"] + " " + record["description"][:1000]
+
+
+from gst_assistant.core.search import STOP_WORDS, KeywordIndex
+
+GST_STOP_WORDS = {"gst", "tax", "taxes", "rate", "rates", "applicable", "charged", "taxable"}
+
+
+def build_keyword_index(records):
+    return KeywordIndex(records, card_text, stop_words=STOP_WORDS | GST_STOP_WORDS)

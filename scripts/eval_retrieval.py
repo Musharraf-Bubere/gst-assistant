@@ -3,13 +3,13 @@ import json
 from gst_assistant.core.hybrid import HybridIndex
 from gst_assistant.core.search import KeywordIndex
 from gst_assistant.core.vector_search import VectorIndex
-from gst_assistant.domains.gst.answer import card_text, embed_text, load_records
+from gst_assistant.domains.gst.answer import build_keyword_index, embed_text, load_records
 
 with open("eval/questions.json", encoding="utf-8") as file:
     questions = json.load(file)
 
 records = load_records()
-keyword = KeywordIndex(records, card_text)
+keyword = build_keyword_index(records)
 vector = VectorIndex(records, embed_text, cache_path="data/processed/vectors.npy")
 indexes = {
     "keyword": keyword,
