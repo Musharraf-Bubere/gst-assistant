@@ -152,3 +152,9 @@ Add a new entry whenever I choose between options or change a decision.
 - Trade-offs: possibly lower quality than a hosted model, short input window, English only.
 - Rule: cards and queries must use the same embedding model, so switching means rebuilding the vectors.
 - Plan: put embeddings behind a small interface, add a Gemini embedder, and compare hit rate, speed and cost on the same evaluation set.
+
+## D27. First comparison: keyword 6/7, vector 7/7 (Oct 2026)
+- On the first 7 questions, vector search fixed "spaceship" vs "spacecraft" and lost nothing.
+- Limit: 7 easy questions cannot separate the methods. Extended to 20 lookup questions with everyday wording, an exact code, and a typo.
+- Rule: expected ids come from the PDF, not from the app's own search, to avoid testing the search against itself.
+- Note: fastembed downloaded the quantized (smaller) ONNX version of bge-small-en-v1.5.
