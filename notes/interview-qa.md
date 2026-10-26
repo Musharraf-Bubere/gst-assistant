@@ -90,3 +90,6 @@ A: On my evaluation set the two methods failed on different questions. Keyword s
 
 **Q: Did hybrid search improve things?**
 A: Yes, from 15 (keyword) and 16 (vector) to 17 of 19 on my test set. But it made one question worse than vector alone: "tax on electricity". With RRF two weak votes for a wrong card can beat one strong vote for the right card. I'm measuring weights, more retrieved cards and re-ranking rather than guessing. The test set is small, so a one-question change is 5%, and I'm growing it.
+
+**Q: How do you know your results are not overfitted?**
+A: I keep a held-out question set that I never tune on and run only at milestones. After I changed stop words to fix one practice question, hybrid went from 17 to 18 of 19, but that set was no longer fair, because I had studied for it. The held-out score tells me how much of the gain is real.

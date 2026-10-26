@@ -172,3 +172,14 @@ Add a new entry whenever I choose between options or change a decision.
 - Problem: for "tax on electricity" the right card was 2nd for vector and not in the keyword top 50, and hybrid pushed it to 7th. Common words ("tax", "on") made the keyword list full of junk that also scored slightly in the vector list.
 - Chose: remove ordinary stop words and GST words that appear in every query ("gst", "tax", "rate") before keyword search, in both the cards and the question. Kept "other" and "than", which change meaning.
 - Checked: re-run the same 19 questions and compare per question, not only the total.
+
+## D30. Practice set and held-out set (Oct 2026)
+- After tuning on q19 (stop words), the 19-question set was no longer a fair test: hybrid 18 of 19.
+- Chose: keep eval/questions.json for tuning and eval/heldout.json (10 taxable-item questions, ids verified in the PDF) for milestone checks only.
+- Rule: do not tune on held-out failures. If one fails, write new practice questions about that area and fix those.
+- Result after stop words on the practice set: keyword 15, vector 16, hybrid 18 of 19 (only the typo "gingr" missed).
+
+## D31. Held-out result and a hypothesis (Oct 2026)
+- Held-out (10 simple lookups): keyword 10, vector 7, hybrid 10. Hybrid held up; no sign of overfitting from the stop-words change.
+- Limit: these questions use words that appear in the notification, so they are easy for keyword search. They do not test synonyms, typos or Hindi words. A harder held-out set is needed.
+- Vector misses (vermicelli, motorcycles up to 350cc, refrigerators) were all long multi-item cards. Hypothesis: split long descriptions into one card per item. Test with new practice questions, not by tuning on these three.
