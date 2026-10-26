@@ -1,3 +1,5 @@
+import sys
+
 import json
 
 from gst_assistant.core.hybrid import HybridIndex
@@ -5,7 +7,8 @@ from gst_assistant.core.search import KeywordIndex
 from gst_assistant.core.vector_search import VectorIndex
 from gst_assistant.domains.gst.answer import build_keyword_index, embed_text, load_records
 
-with open("eval/questions.json", encoding="utf-8") as file:
+path = sys.argv[1] if len(sys.argv) > 1 else "eval/questions.json"
+with open(path, encoding="utf-8") as file:
     questions = json.load(file)
 
 records = load_records()

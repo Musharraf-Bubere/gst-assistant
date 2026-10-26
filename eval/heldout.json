@@ -1,0 +1,12 @@
+[
+  {"id": "h01", "question": "Is there GST on cheese?", "type": "answer", "expected_ids": ["CT-09-2025:I:8"], "expected": "5%"},
+  {"id": "h02", "question": "GST on ghee", "type": "answer", "expected_ids": ["CT-09-2025:I:7"], "expected": "5%"},
+  {"id": "h03", "question": "GST on toothpaste", "type": "answer", "expected_ids": ["CT-09-2025:I:246"], "expected": "5%"},
+  {"id": "h04", "question": "What is the GST on shampoo?", "type": "answer", "expected_ids": ["CT-09-2025:I:245"], "expected": "5%"},
+  {"id": "h05", "question": "GST on ice cream", "type": "answer", "expected_ids": ["CT-09-2025:I:141"], "expected": "5%"},
+  {"id": "h06", "question": "What tax do I pay on vermicelli?", "type": "answer", "expected_ids": ["CT-09-2025:I:119"], "expected": "5%"},
+  {"id": "h07", "question": "GST rate for HSN 3306", "type": "answer", "expected_ids": ["CT-09-2025:I:246"], "expected": "5%"},
+  {"id": "h08", "question": "GST on motorcycles up to 350cc", "type": "answer", "expected_ids": ["CT-09-2025:II:546"], "expected": "18%"},
+  {"id": "h09", "question": "GST on refrigerators", "type": "answer", "expected_ids": ["CT-09-2025:II:407"], "expected": "18%"},
+  {"id": "h10", "question": "GST on CCTV cameras", "type": "answer", "expected_ids": ["CT-09-2025:II:497"], "expected": "18%"}
+]

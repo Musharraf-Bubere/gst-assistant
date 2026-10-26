@@ -167,3 +167,8 @@ Add a new entry whenever I choose between options or change a decision.
 - Result on 19 lookup questions: keyword 15, vector 16, hybrid 17. Hybrid fixed 5 questions one method had missed, but missed q19 (electricity), which vector had found.
 - My prediction was 18 of 19. It was wrong. RRF rewards cards that appear on both lists, so two weak votes can outrank one strong vote.
 - Next: look at the position of the right card for the misses, then try weights, more cards to the LLM, a re-ranker or query rewriting, and compare on the same set.
+
+## D29. Stop words in keyword search (Oct 2026)
+- Problem: for "tax on electricity" the right card was 2nd for vector and not in the keyword top 50, and hybrid pushed it to 7th. Common words ("tax", "on") made the keyword list full of junk that also scored slightly in the vector list.
+- Chose: remove ordinary stop words and GST words that appear in every query ("gst", "tax", "rate") before keyword search, in both the cards and the question. Kept "other" and "than", which change meaning.
+- Checked: re-run the same 19 questions and compare per question, not only the total.
