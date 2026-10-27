@@ -183,3 +183,9 @@ Add a new entry whenever I choose between options or change a decision.
 - Held-out (10 simple lookups): keyword 10, vector 7, hybrid 10. Hybrid held up; no sign of overfitting from the stop-words change.
 - Limit: these questions use words that appear in the notification, so they are easy for keyword search. They do not test synonyms, typos or Hindi words. A harder held-out set is needed.
 - Vector misses (vermicelli, motorcycles up to 350cc, refrigerators) were all long multi-item cards. Hypothesis: split long descriptions into one card per item. Test with new practice questions, not by tuning on these three.
+
+## D32. Typo tolerance in keyword search (Oct 2026)
+- Chose: replace a query word that appears in no card with the closest card word (difflib, similarity at least 0.8). Skip numbers and words under 4 letters.
+- Why: "gingr" was missed by all three methods (hybrid position 19).
+- Risk: a real but missing word may be changed into a wrong word. Checked by re-running both evaluation sets.
+- Limit: only the keyword side is corrected. The vector side still sees the typo.
