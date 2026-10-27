@@ -189,3 +189,8 @@ Add a new entry whenever I choose between options or change a decision.
 - Why: "gingr" was missed by all three methods (hybrid position 19).
 - Risk: a real but missing word may be changed into a wrong word. Checked by re-running both evaluation sets.
 - Limit: only the keyword side is corrected. The vector side still sees the typo.
+
+## D33. Retrieval results after typo tolerance (Oct 2026)
+- Practice set: keyword 17, vector 16, hybrid 19 of 19. Held-out: keyword 10, vector 7, hybrid 10 of 10.
+- Caveat: the practice set was tuned on twice, so 19 of 19 is optimistic. Held-out is easy (words appear in the notification). Next: harder questions and a harder held-out set.
+- Next: calibrate a "not found" threshold on the similarity score of the best card, using eval/guards.json, instead of guessing a number.
