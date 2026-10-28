@@ -200,3 +200,8 @@ Add a new entry whenever I choose between options or change a decision.
 - Chose: (1) regex rules for attacks, (2) a low threshold of 0.55 only for clearly unrelated text, (3) the LLM with a strict prompt decides not-found for the rest, then citation and number checks on its answer.
 - Caveat: 0.55 rests on about 26 real questions and belongs to this embedding model. Re-measure if either changes.
 - Check: no real question may be blocked (wrongly blocked = 0).
+
+## D35. Output inspector: citation and rate checks (Oct 2026)
+- Chose: after the LLM answers, check (1) at least one card id is cited, (2) every cited id was actually retrieved, (3) every percentage in the answer appears in the cited cards (their GST rate or numbers in their text). A failed answer is replaced with "I found related notifications but could not verify an answer".
+- Tested offline with 8 fake answers (4 good, 4 bad), no LLM calls.
+- Limits: it cannot detect a real but wrong card. Numbers in card text count as allowed, so a coincidence is possible. The answer evaluation (expected ids) must catch wrong-card answers.

@@ -93,3 +93,6 @@ A: Yes, from 15 (keyword) and 16 (vector) to 17 of 19 on my test set. But it mad
 
 **Q: How do you know your results are not overfitted?**
 A: I keep a held-out question set that I never tune on and run only at milestones. After I changed stop words to fix one practice question, hybrid went from 17 to 18 of 19, but that set was no longer fair, because I had studied for it. The held-out score tells me how much of the gain is real.
+
+**Q: How do you stop the model from inventing a rate?**
+A: Gemini must cite card ids. After it answers, a checker verifies that each cited id was among the retrieved cards and that every percentage in the answer appears on the cited cards. If not, the user sees "could not verify" instead of Gemini's text. It can't catch citing a real but wrong card, so I also evaluate answers against the expected card.
