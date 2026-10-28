@@ -194,3 +194,9 @@ Add a new entry whenever I choose between options or change a decision.
 - Practice set: keyword 17, vector 16, hybrid 19 of 19. Held-out: keyword 10, vector 7, hybrid 10 of 10.
 - Caveat: the practice set was tuned on twice, so 19 of 19 is optimistic. Held-out is easy (words appear in the notification). Next: harder questions and a harder held-out set.
 - Next: calibrate a "not found" threshold on the similarity score of the best card, using eval/guards.json, instead of guessing a number.
+
+## D34. Layered guards, because one similarity threshold cannot work (Oct 2026)
+- Measured top similarity: real questions 0.614 to 0.789, refuse or not-found questions 0.487 to 0.679. They overlap between about 0.61 and 0.68. The attack "ignore your rules ... exempt" scored 0.679 because its words are close to real cards.
+- Chose: (1) regex rules for attacks, (2) a low threshold of 0.55 only for clearly unrelated text, (3) the LLM with a strict prompt decides not-found for the rest, then citation and number checks on its answer.
+- Caveat: 0.55 rests on about 26 real questions and belongs to this embedding model. Re-measure if either changes.
+- Check: no real question may be blocked (wrongly blocked = 0).
