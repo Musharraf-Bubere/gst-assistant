@@ -96,3 +96,6 @@ A: I keep a held-out question set that I never tune on and run only at milestone
 
 **Q: How do you stop the model from inventing a rate?**
 A: Gemini must cite card ids. After it answers, a checker verifies that each cited id was among the retrieved cards and that every percentage in the answer appears on the cited cards. If not, the user sees "could not verify" instead of Gemini's text. It can't catch citing a real but wrong card, so I also evaluate answers against the expected card.
+
+**Q: How do you evaluate the whole system, not only search?**
+A: An answer passes only if the status is right, the cited card is the expected card, and the stated value (exempt or the rate) matches. Questions that should be refused must come back as refused or not found. I keep a practice set, a held-out set and a guard set, because once a set is tuned on, a perfect score on it no longer finds problems.

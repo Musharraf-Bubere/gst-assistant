@@ -5,6 +5,7 @@ import time
 
 from gst_assistant.core.llm import get_llm
 from gst_assistant.domains.gst.answer import Searcher, answer_question, load_records
+from gst_assistant.core.logbook import LogBook
 
 path = sys.argv[1] if len(sys.argv) > 1 else "eval/questions.json"
 with open(path, encoding="utf-8") as file:
@@ -12,6 +13,8 @@ with open(path, encoding="utf-8") as file:
 
 searcher = Searcher(load_records())
 llm = get_llm()
+
+logbook = LogBook("data/eval_logs.db")
 
 
 def value_ok(expected, text):
@@ -27,7 +30,7 @@ tokens_in = 0
 tokens_out = 0
 for item in questions:
     try:
-        answer = answer_question(item["question"], searcher, llm)
+        answer = answer_question(item["question"], searcher, llm, logbook=logbook)
     except Exception as error:
         print("ERROR", item["id"], str(error)[:120])
         failed.append(item["id"])

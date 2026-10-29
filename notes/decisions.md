@@ -205,3 +205,8 @@ Add a new entry whenever I choose between options or change a decision.
 - Chose: after the LLM answers, check (1) at least one card id is cited, (2) every cited id was actually retrieved, (3) every percentage in the answer appears in the cited cards (their GST rate or numbers in their text). A failed answer is replaced with "I found related notifications but could not verify an answer".
 - Tested offline with 8 fake answers (4 good, 4 bad), no LLM calls.
 - Limits: it cannot detect a real but wrong card. Numbers in card text count as allowed, so a coincidence is possible. The answer evaluation (expected ids) must catch wrong-card answers.
+
+## D36. First full-pipeline evaluation (Oct 2026)
+- Practice set: 22 of 22 (doorman, hybrid search, Gemini, inspector). About 730 tokens in and 45 out per question.
+- Caveat: the practice set was tuned on and is now saturated, so it can no longer find problems.
+- Fair tests: eval/heldout.json (10 simple lookups) and eval/guards.json (not-found, off-topic, attack). Next: a harder held-out set (conditions, exclusions, everyday Indian words, two-card answers, questions the notifications cannot answer).

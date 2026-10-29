@@ -11,3 +11,5 @@ wheels/
 .env
 
 data/processed/vectors.npy
+
+data/*.db
