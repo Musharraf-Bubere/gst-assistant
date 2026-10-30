@@ -117,3 +117,6 @@ A: Everyday Indian words that the notifications don't use. On a fresh test of ei
 
 **Q: Why not just rewrite every query with the LLM?**
 A: It costs an extra call per question in time, tokens and rate limit, and a bad rewrite can mislead the search. I put the attack rules before it, used its output only as search text, made it fall back to the original question on failure, and compared it with a hand-made glossary on a test set that I froze before building it. (Fill in the scores.)
+
+**Q: What improved your system most, and how do you know?**
+A: Letting the LLM translate everyday Indian words into the notification's wording before searching. I froze a test of 10 unseen words before building it. A hand-made glossary scored 0 of 10 on it, and the LLM rewrite scored 10 of 10. It also showed limits, such as the rewrite inventing a non-word, and two remaining failures that I'm treating as separate experiments, not as proof that it's solved.

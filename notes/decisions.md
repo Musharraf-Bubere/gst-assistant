@@ -252,3 +252,10 @@ Add a new entry whenever I choose between options or change a decision.
 - Fair test: eval/fresh.json (10 everyday words in neither the glossary nor hard_own), run once per mode. Examples in the rewrite prompt use words that appear in no test set.
 - Measure: answers passed, tokens (cost of the extra call), and what the search was fed on failures.
 - Decision rule: adopt rewrite only if it clearly beats the glossary on the fresh set, and keep the glossary if the two together are best.
+
+## D44. Query rewriting adopted, pending regression (Oct 2026)
+- Frozen fresh set (10 unseen everyday words): glossary 0 of 10, rewrite 10 of 10, both 10 of 10. hard_own with rewrite: 6 of 8 (was 1 of 8).
+- Caveats: small set, written by me, mostly produce; the set is now used and a new one is needed for future claims.
+- Bugs and noise seen: Gemini copied the "Question:" label into the search text; it also invented a non-word ("porita"). Labels are stripped; noise is tolerated because search plus answer checks follow.
+- Open problems (development items, not for the fresh set): (1) RRF let cards found by both lists beat the exact "agarbatti" card; (2) the answering step does not know that murmura means puffed rice because it sees only the original question.
+- Next: regression runs in "both" mode, then make "both" the default if the old scores hold.

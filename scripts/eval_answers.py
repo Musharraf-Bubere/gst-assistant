@@ -10,7 +10,7 @@ from gst_assistant.domains.gst.answer import Searcher, answer_question, load_rec
 PAUSE_SECONDS = 4
 
 path = sys.argv[1] if len(sys.argv) > 1 else "eval/questions.json"
-mode = sys.argv[2] if len(sys.argv) > 2 else "glossary"
+mode = sys.argv[2] if len(sys.argv) > 2 else "both"
 print("mode:", mode)
 
 with open(path, encoding="utf-8") as file:
