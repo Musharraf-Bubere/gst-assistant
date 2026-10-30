@@ -1,0 +1,18 @@
+[
+  {"id": "k01", "question": "What is the GST on rice?", "type": "answer", "expected_ids": ["CT-09-2025:I:48", "CT-10-2025:-:67"], "expected": "exempt", "note": "two cards: loose rice exempt, pre-packaged rice 5%"},
+  {"id": "k02", "question": "What is the GST on branded packaged atta?", "type": "answer", "expected_ids": ["CT-09-2025:I:51"], "expected": "5%", "note": "pre-packaged and labelled wheat flour"},
+  {"id": "k03", "question": "Is there GST on loose atta sold without a brand?", "type": "answer", "expected_ids": ["CT-10-2025:-:70"], "expected": "exempt", "note": "wheat flour other than pre-packaged"},
+  {"id": "k04", "question": "GST on honey", "type": "answer", "expected_ids": ["CT-09-2025:I:10", "CT-10-2025:-:19"], "expected": "exempt", "note": "two cards: loose natural honey exempt, pre-packaged 5%"},
+  {"id": "k05", "question": "GST on pre-packaged jaggery (gur)", "type": "answer", "expected_ids": ["CT-09-2025:I:106"], "expected": "5%", "note": "pre-packaged jaggery"},
+  {"id": "k06", "question": "Do I pay GST on loose moong dal?", "type": "answer", "expected_ids": ["CT-10-2025:-:39"], "expected": "exempt", "note": "everyday word; the card says dried leguminous vegetables, shelled"},
+  {"id": "k07", "question": "GST on supari", "type": "answer", "expected_ids": ["CT-09-2025:I:23"], "expected": "5%", "note": "everyday word for dried areca nuts"},
+  {"id": "k08", "question": "Is kumkum or bindi taxable?", "type": "answer", "expected_ids": ["CT-10-2025:-:117"], "expected": "exempt", "note": "kumkum, bindi, sindur, alta"},
+  {"id": "k09", "question": "GST on rakhi", "type": "answer", "expected_ids": ["CT-10-2025:-:171"], "expected": "exempt", "note": "rakhi other than those made of chapter 71 goods"},
+  {"id": "k10", "question": "GST on clay Ganesh idols", "type": "answer", "expected_ids": ["CT-10-2025:-:152"], "expected": "exempt", "note": "idols made of clay"},
+  {"id": "k11", "question": "GST on papad", "type": "answer", "expected_ids": ["CT-10-2025:-:99"], "expected": "exempt", "note": "spelled pappad in the notification"},
+  {"id": "k12", "question": "What is the GST on plastic bangles?", "type": "answer", "expected_ids": ["CT-10-2025:-:119"], "expected": "exempt", "note": "bracket note in a plastics row excludes bangles"},
+  {"id": "k13", "question": "What is the GST on restaurant services?", "type": "not_found", "expected_ids": [], "expected": "not found", "note": "services are not loaded yet; should flip to an answer when services are added"},
+  {"id": "k14", "question": "Is there GST on health insurance premiums?", "type": "not_found", "expected_ids": [], "expected": "not found", "note": "services notification 16/2025 not parsed yet"},
+  {"id": "k15", "question": "Fresh ginger is taxed at 5%, right?", "type": "answer", "expected_ids": ["CT-10-2025:-:60"], "expected": "exempt", "note": "wrong premise; the user must be corrected"},
+  {"id": "k16", "question": "What is the CGST rate on pan masala?", "type": "answer", "expected_ids": ["CT-09-2025:VII:1"], "expected": "14%", "note": "CGST is half of 28%; our cards show only the total, so a failure is expected"}
+]

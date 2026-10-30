@@ -99,3 +99,6 @@ A: Gemini must cite card ids. After it answers, a checker verifies that each cit
 
 **Q: How do you evaluate the whole system, not only search?**
 A: An answer passes only if the status is right, the cited card is the expected card, and the stated value (exempt or the rate) matches. Questions that should be refused must come back as refused or not found. I keep a practice set, a held-out set and a guard set, because once a set is tuned on, a perfect score on it no longer finds problems.
+
+**Q: How would you know in production that something is going wrong?**
+A: Every request is logged with its status, the cards retrieved and cited, tokens, and search, model and total time. A report counts refusals, "not found" and "could not verify" answers and shows latency and token use. A rise in "unverified" or "not found" would be my first signal, and the log lets me replay the exact question and cards.

@@ -210,3 +210,14 @@ Add a new entry whenever I choose between options or change a decision.
 - Practice set: 22 of 22 (doorman, hybrid search, Gemini, inspector). About 730 tokens in and 45 out per question.
 - Caveat: the practice set was tuned on and is now saturated, so it can no longer find problems.
 - Fair tests: eval/heldout.json (10 simple lookups) and eval/guards.json (not-found, off-topic, attack). Next: a harder held-out set (conditions, exclusions, everyday Indian words, two-card answers, questions the notifications cannot answer).
+
+## D37. Request logging and the first monitoring report (Oct 2026)
+- Chose: log every request to SQLite (question, status, answer, retrieved and cited ids, tokens, search, Gemini and total time, feedback column for thumbs up and down). Evaluation runs write to a separate file so test runs never mix with real usage. Log files are in .gitignore because they hold user questions.
+- Report: counts by status, average and slowest response time, average Gemini time, token totals. Cost = tokens x the provider's current price, looked up when needed.
+- Next: the thumbs up and down button in the UI, and a freshness check for the documents.
+
+## D38. Hard evaluation set (Oct 2026)
+- 16 questions: packaged vs loose (rice, atta, honey, jaggery), everyday Indian words (moong dal, supari, kumkum, rakhi, papad), an exclusion (plastic bangles), two services questions the data cannot answer yet, a wrong-premise question and a CGST question.
+- Ids were taken from the PDFs with a separate reading tool, not from the app, and I spot-checked them in the PDFs.
+- k16 (CGST rate) is expected to fail because the cards show only the total rate. k13 and k14 should become answerable when services are parsed.
+- Rule: sort failures into kinds before fixing anything, and re-run all sets after each change.
