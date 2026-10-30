@@ -105,3 +105,6 @@ A: Every request is logged with its status, the cards retrieved and cited, token
 
 **Q: How do you handle users who use everyday words instead of the legal terms?**
 A: My hard test set showed that "atta", "moong dal" and "supari" found nothing, because the notifications say "wheat flour", "dried leguminous vegetables" and "areca nuts". I added a glossary that appends the notification words to the search query, while the user's question is unchanged for the model. I compared it before and after on the same sets, and I keep a separate set of new words to check that the glossary generalizes. A later option is to let the LLM rewrite the query, and I'd compare the two.
+
+**Q: What happens when the LLM provider is rate-limited or down?**
+A: The model call retries twice on a 429 with a wait, and if it still fails the app returns a polite "busy" message with status error instead of crashing. Questions that the guards refuse never call the model, so they still work. My evaluation reports errors separately from failures, so an outage cannot look like a quality problem.

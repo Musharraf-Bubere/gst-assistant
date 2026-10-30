@@ -228,3 +228,9 @@ Add a new entry whenever I choose between options or change a decision.
 - Fixes: a glossary that adds notification words to the search query (the user's question is unchanged for Gemini), and a CGST, SGST and IGST split on taxable cards, with the CGST number accepted by the inspector.
 - Fairness: the glossary was written after seeing these failures. A new set (eval/hard_own.json) with words outside the glossary is the real test.
 - Observation to check: the same short generic cards (CT-10-2025:-:131, I:507, I:437, I:514, VI:1) keep appearing in vector results for unrelated questions.
+
+## D40. Rate limits and graceful failure (Oct 2026)
+- Problem: the evaluation hit Gemini 429 RESOURCE_EXHAUSTED. Errors were counted as failures and the app would have crashed.
+- Chose: retry twice with a 20 second wait on 429 only (other errors raise at once), a new status "error" with a polite message, a 4 second pause in the exam, and errors reported separately from failures.
+- Observed: refused and not-found questions never call Gemini, so the guards keep working when the model is unavailable.
+- Production note: a free quota will limit real users. Options to evaluate later: answer caching for repeated questions, a per-user request limit, a paid plan.

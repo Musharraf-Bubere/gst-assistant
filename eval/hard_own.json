@@ -1,0 +1,10 @@
+[
+  {"id": "o01", "question": "GST on paan leaves", "type": "answer", "expected_ids": ["CT-10-2025:-:93"], "expected": "exempt", "note": "everyday word for betel leaves"},
+  {"id": "o02", "question": "GST on chai patti", "type": "answer", "expected_ids": ["CT-09-2025:I:34"], "expected": "5%", "note": "tea; unprocessed green leaves of tea are exempt in a different row"},
+  {"id": "o03", "question": "Is anda taxable?", "type": "answer", "expected_ids": ["CT-10-2025:-:18"], "expected": "exempt", "note": "eggs in shell"},
+  {"id": "o04", "question": "GST on murmura", "type": "answer", "expected_ids": ["CT-09-2025:I:121", "CT-10-2025:-:98"], "expected": "exempt", "note": "puffed rice, known as muri; two cards: packaged 5% and loose exempt"},
+  {"id": "o05", "question": "GST on patang for Makar Sankranti", "type": "answer", "expected_ids": ["CT-09-2025:I:323"], "expected": "5%", "note": "kites"},
+  {"id": "o06", "question": "GST on incense sticks", "type": "answer", "expected_ids": ["CT-09-2025:I:250"], "expected": "5%", "note": "the card says agarbatti, dhoop"},
+  {"id": "o07", "question": "GST on sabudana", "type": "answer", "expected_ids": ["CT-09-2025:I:120"], "expected": "5%", "note": "tapioca pearls; the word sabudana appears in the card, so this one should be easy"},
+  {"id": "o08", "question": "What is the GST on a jhadu?", "type": "answer", "expected_ids": ["CT-10-2025:-:162"], "expected": "exempt", "note": "brooms of vegetable materials; the notification spells it jhadoo elsewhere"}
+]
