@@ -4,8 +4,10 @@ import sys
 import time
 
 from gst_assistant.core.llm import get_llm
-from gst_assistant.domains.gst.answer import Searcher, answer_question, load_records
 from gst_assistant.core.logbook import LogBook
+from gst_assistant.domains.gst.answer import Searcher, answer_question, load_records
+
+PAUSE_SECONDS = 4
 
 path = sys.argv[1] if len(sys.argv) > 1 else "eval/questions.json"
 with open(path, encoding="utf-8") as file:
@@ -13,7 +15,6 @@ with open(path, encoding="utf-8") as file:
 
 searcher = Searcher(load_records())
 llm = get_llm()
-
 logbook = LogBook("data/eval_logs.db")
 
 
@@ -26,17 +27,19 @@ def value_ok(expected, text):
 
 passed = 0
 failed = []
+errors = []
 tokens_in = 0
 tokens_out = 0
 for item in questions:
-    try:
-        answer = answer_question(item["question"], searcher, llm, logbook=logbook)
-    except Exception as error:
-        print("ERROR", item["id"], str(error)[:120])
-        failed.append(item["id"])
-        continue
+    answer = answer_question(item["question"], searcher, llm, logbook=logbook)
     tokens_in += answer.tokens_in
     tokens_out += answer.tokens_out
+
+    if answer.status == "error":
+        errors.append(item["id"])
+        print("ERROR", item["id"], answer.raw_text[:100])
+        time.sleep(PAUSE_SECONDS)
+        continue
 
     if item["type"] == "answer":
         right_card = all(card_id in answer.cited_ids for card_id in item["expected_ids"])
@@ -53,8 +56,11 @@ for item in questions:
         print("      expected:", item["type"], item["expected_ids"], item["expected"])
         print("      cited:   ", answer.cited_ids)
         print("      answer:  ", (answer.raw_text or answer.text)[:200].replace("\n", " "))
-    time.sleep(1)
+    if answer.tokens_in:
+        time.sleep(PAUSE_SECONDS)
 
+scored = len(questions) - len(errors)
 print()
-print("answer pipeline:", passed, "of", len(questions), "| failed:", ", ".join(failed) or "none")
+print("answer pipeline:", passed, "of", scored, "scored | failed:", ", ".join(failed) or "none")
+print("errors (not scored):", ", ".join(errors) or "none")
 print("tokens in:", tokens_in, "| tokens out:", tokens_out)

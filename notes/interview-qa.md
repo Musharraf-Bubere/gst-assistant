@@ -102,3 +102,6 @@ A: An answer passes only if the status is right, the cited card is the expected 
 
 **Q: How would you know in production that something is going wrong?**
 A: Every request is logged with its status, the cards retrieved and cited, tokens, and search, model and total time. A report counts refusals, "not found" and "could not verify" answers and shows latency and token use. A rise in "unverified" or "not found" would be my first signal, and the log lets me replay the exact question and cards.
+
+**Q: How do you handle users who use everyday words instead of the legal terms?**
+A: My hard test set showed that "atta", "moong dal" and "supari" found nothing, because the notifications say "wheat flour", "dried leguminous vegetables" and "areca nuts". I added a glossary that appends the notification words to the search query, while the user's question is unchanged for the model. I compared it before and after on the same sets, and I keep a separate set of new words to check that the glossary generalizes. A later option is to let the LLM rewrite the query, and I'd compare the two.

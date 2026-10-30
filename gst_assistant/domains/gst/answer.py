@@ -28,6 +28,7 @@ Rules:
 MAX_DESCRIPTION = 1500
 GST_STOP_WORDS = {"gst", "tax", "taxes", "rate", "rates", "applicable", "charged", "taxable"}
 UNVERIFIED = "I found related notifications but could not verify an answer. Please check: "
+BUSY = "The answer service is busy right now. Please try again in a minute."
 
 
 @dataclass
@@ -125,7 +126,13 @@ def answer_without_log(question, searcher, llm, top_k):
     cards = "\n\n".join(format_card(record) for record in records)
     prompt = "CARDS:\n\n" + cards + "\n\nQUESTION: " + question
     llm_started = time.perf_counter()
-    result = llm.generate(SYSTEM_PROMPT, prompt)
+    try:
+        result = llm.generate(SYSTEM_PROMPT, prompt)
+    except Exception as error:
+        return Answer(
+            "error", BUSY, retrieved_ids, search_ms=search_ms,
+            raw_text=str(error)[:300], search_query=search_query,
+        )
     llm_ms = (time.perf_counter() - llm_started) * 1000
     cited_ids = ID_PATTERN.findall(result.text)
 

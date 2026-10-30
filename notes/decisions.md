@@ -221,3 +221,10 @@ Add a new entry whenever I choose between options or change a decision.
 - Ids were taken from the PDFs with a separate reading tool, not from the app, and I spot-checked them in the PDFs.
 - k16 (CGST rate) is expected to fail because the cards show only the total rate. k13 and k14 should become answerable when services are parsed.
 - Rule: sort failures into kinds before fixing anything, and re-run all sets after each change.
+
+## D39. Hard-set failures sorted by root cause, then fixed (Oct 2026)
+- Hard set: answers 11 of 16, retrieval (hybrid) 10 of 14. Five failures, two root causes: (1) vocabulary gap between everyday words and notification words (atta, moong dal, supari, branded, loose), (2) cards showed only the total rate, so a CGST question could not be answered.
+- No failure was a wrong answer. Gemini said "not found", so the safe layers worked, but recall was low.
+- Fixes: a glossary that adds notification words to the search query (the user's question is unchanged for Gemini), and a CGST, SGST and IGST split on taxable cards, with the CGST number accepted by the inspector.
+- Fairness: the glossary was written after seeing these failures. A new set (eval/hard_own.json) with words outside the glossary is the real test.
+- Observation to check: the same short generic cards (CT-10-2025:-:131, I:507, I:437, I:514, VI:1) keep appearing in vector results for unrelated questions.
