@@ -61,6 +61,11 @@ def check_output(answer, retrieved_records):
         record = by_id[card_id]
         if record["gst_rate"] is not None:
             allowed.add(float(record["gst_rate"]))
+            if record["gst_rate"] is not None:
+                allowed.add(float(record["gst_rate"]))
+            if record.get("cgst_rate") is not None:
+                allowed.add(float(record["cgst_rate"]))
+            allowed |= numbers_in(record["hsn_text"] + " " + record["description"])
         allowed |= numbers_in(record["hsn_text"] + " " + record["description"])
     for percent in PERCENT.findall(answer):
         if float(percent) not in allowed:

@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 from gst_assistant.core.hybrid import HybridIndex
 from gst_assistant.core.search import STOP_WORDS, KeywordIndex
 from gst_assistant.core.vector_search import VectorIndex
+from gst_assistant.domains.gst.glossary import expand_query, load_glossary
 from gst_assistant.domains.gst.guards import (
     ID_PATTERN,
     NOT_FOUND,
@@ -42,6 +43,7 @@ class Answer:
     llm_ms: float = 0.0
     total_ms: float = 0.0
     request_id: int = 0
+    search_query: str = ""
 
 
 def load_records(path="data/processed/records.json"):
@@ -66,6 +68,7 @@ class Searcher:
 
     def __init__(self, records):
         self.records = records
+        self.glossary = load_glossary()
         self.keyword = build_keyword_index(records)
         self.vector = VectorIndex(records, embed_text, cache_path="data/processed/vectors.npy")
         self.hybrid = HybridIndex([self.keyword, self.vector])
@@ -75,7 +78,12 @@ def format_card(record):
     if record["treatment"] == "exempt":
         rate = "exempt (no GST)"
     else:
-        rate = str(record["gst_rate"]) + "% GST"
+        total = str(record["gst_rate"])
+        half = str(record["cgst_rate"])
+        rate = (
+            total + "% GST in total (CGST " + half + "% + SGST " + half
+            + "% within a state, IGST " + total + "% between states)"
+        )
     return (
         "id: " + record["id"] + "\n"
         "code: " + record["hsn_text"] + "\n"
@@ -100,18 +108,19 @@ def answer_without_log(question, searcher, llm, top_k):
     if message:
         return Answer("refused", message)
 
+    search_query = expand_query(question, searcher.glossary)
     search_started = time.perf_counter()
-    best_similarity = searcher.vector.search(question, top_k=1)[0][1]
+    best_similarity = searcher.vector.search(search_query, top_k=1)[0][1]
     message = check_similarity(best_similarity)
     if message:
         return Answer("not_found", message)
 
-    hits = searcher.hybrid.search(question, top_k=top_k)
+    hits = searcher.hybrid.search(search_query, top_k=top_k)
     search_ms = (time.perf_counter() - search_started) * 1000
     records = [record for record, score in hits]
     retrieved_ids = [record["id"] for record in records]
     if not records:
-        return Answer("not_found", NOT_FOUND, retrieved_ids, search_ms=search_ms)
+        return Answer("not_found", NOT_FOUND, retrieved_ids, search_ms=search_ms, search_query=search_query)
 
     cards = "\n\n".join(format_card(record) for record in records)
     prompt = "CARDS:\n\n" + cards + "\n\nQUESTION: " + question
@@ -130,5 +139,5 @@ def answer_without_log(question, searcher, llm, top_k):
             status, text = "answered", result.text
     return Answer(
         status, text, retrieved_ids, cited_ids, result.tokens_in, result.tokens_out,
-        result.text, search_ms=search_ms, llm_ms=llm_ms,
+        result.text, search_ms=search_ms, llm_ms=llm_ms, search_query=search_query,
     )
