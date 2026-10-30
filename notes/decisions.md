@@ -246,3 +246,9 @@ Add a new entry whenever I choose between options or change a decision.
 - 6 of 7 failures were an honest "not found". One (jhadu) cited the card for the raw material and said exempt, right by luck and wrong in reasoning. The inspector cannot catch a real but wrong card; the expected-id check did.
 - Causes: the English-only embedding model does not understand these words (0 of 8 on vector search), keyword search needs identical words, the glossary only covers the words I wrote. The same generic cards (CT-10-2025:-:131, I:437, I:514, VI:1, VI:2) appear when the model does not understand the question.
 - Plan: compare A (extended glossary), B (LLM query rewriting) and both on a frozen set, eval/fresh.json, run once per approach.
+
+## D43. Query rewriting by the LLM, compared on a frozen set (Oct 2026)
+- Chose: four modes (none, glossary, rewrite, both). Attack rules run before the rewrite, the rewrite output is only used as search text, and a failed rewrite falls back to the original question.
+- Fair test: eval/fresh.json (10 everyday words in neither the glossary nor hard_own), run once per mode. Examples in the rewrite prompt use words that appear in no test set.
+- Measure: answers passed, tokens (cost of the extra call), and what the search was fed on failures.
+- Decision rule: adopt rewrite only if it clearly beats the glossary on the fresh set, and keep the glossary if the two together are best.

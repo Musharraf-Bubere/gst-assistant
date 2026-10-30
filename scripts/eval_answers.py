@@ -10,6 +10,9 @@ from gst_assistant.domains.gst.answer import Searcher, answer_question, load_rec
 PAUSE_SECONDS = 4
 
 path = sys.argv[1] if len(sys.argv) > 1 else "eval/questions.json"
+mode = sys.argv[2] if len(sys.argv) > 2 else "glossary"
+print("mode:", mode)
+
 with open(path, encoding="utf-8") as file:
     questions = json.load(file)
 
@@ -31,7 +34,7 @@ errors = []
 tokens_in = 0
 tokens_out = 0
 for item in questions:
-    answer = answer_question(item["question"], searcher, llm, logbook=logbook)
+    answer = answer_question(item["question"], searcher, llm, logbook=logbook, mode=mode)
     tokens_in += answer.tokens_in
     tokens_out += answer.tokens_out
 
@@ -54,6 +57,8 @@ for item in questions:
     else:
         failed.append(item["id"])
         print("      expected:", item["type"], item["expected_ids"], item["expected"])
+        print("      searched: ", answer.search_query)
+        print("      retrieved:", answer.retrieved_ids)
         print("      cited:   ", answer.cited_ids)
         print("      answer:  ", (answer.raw_text or answer.text)[:200].replace("\n", " "))
     if answer.tokens_in:

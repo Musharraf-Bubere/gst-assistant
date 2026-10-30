@@ -14,6 +14,7 @@ from gst_assistant.domains.gst.guards import (
     check_output,
     check_similarity,
 )
+from gst_assistant.domains.gst.rewrite import rewrite_query
 
 SYSTEM_PROMPT = """You are a GST assistant for Indian tax professionals.
 Answer ONLY from the cards below. Each card has an id.
@@ -95,33 +96,51 @@ def format_card(record):
     )
 
 
-def answer_question(question, searcher, llm, top_k=5, logbook=None):
+def answer_question(question, searcher, llm, top_k=5, logbook=None, mode="glossary"):
     started = time.perf_counter()
-    answer = answer_without_log(question, searcher, llm, top_k)
+    answer = answer_without_log(question, searcher, llm, top_k, mode)
     answer.total_ms = (time.perf_counter() - started) * 1000
     if logbook is not None:
         answer.request_id = logbook.record(question, answer)
     return answer
 
 
-def answer_without_log(question, searcher, llm, top_k):
+def build_search_query(question, searcher, llm, mode):
+    """Return the text to search with, plus the tokens used to build it."""
+    query = question
+    tokens_in = 0
+    tokens_out = 0
+    if mode in ("rewrite", "both"):
+        query, tokens_in, tokens_out = rewrite_query(question, llm)
+    if mode in ("glossary", "both"):
+        query = expand_query(query, searcher.glossary)
+    return query, tokens_in, tokens_out
+
+
+def answer_without_log(question, searcher, llm, top_k, mode):
     message = check_input(question)
     if message:
         return Answer("refused", message)
 
-    search_query = expand_query(question, searcher.glossary)
+    search_query, rewrite_in, rewrite_out = build_search_query(question, searcher, llm, mode)
     search_started = time.perf_counter()
     best_similarity = searcher.vector.search(search_query, top_k=1)[0][1]
     message = check_similarity(best_similarity)
     if message:
-        return Answer("not_found", message)
+        return Answer(
+            "not_found", message, tokens_in=rewrite_in, tokens_out=rewrite_out,
+            search_query=search_query,
+        )
 
     hits = searcher.hybrid.search(search_query, top_k=top_k)
     search_ms = (time.perf_counter() - search_started) * 1000
     records = [record for record, score in hits]
     retrieved_ids = [record["id"] for record in records]
     if not records:
-        return Answer("not_found", NOT_FOUND, retrieved_ids, search_ms=search_ms, search_query=search_query)
+        return Answer(
+            "not_found", NOT_FOUND, retrieved_ids, tokens_in=rewrite_in, tokens_out=rewrite_out,
+            search_ms=search_ms, search_query=search_query,
+        )
 
     cards = "\n\n".join(format_card(record) for record in records)
     prompt = "CARDS:\n\n" + cards + "\n\nQUESTION: " + question
@@ -130,8 +149,8 @@ def answer_without_log(question, searcher, llm, top_k):
         result = llm.generate(SYSTEM_PROMPT, prompt)
     except Exception as error:
         return Answer(
-            "error", BUSY, retrieved_ids, search_ms=search_ms,
-            raw_text=str(error)[:300], search_query=search_query,
+            "error", BUSY, retrieved_ids, tokens_in=rewrite_in, tokens_out=rewrite_out,
+            search_ms=search_ms, raw_text=str(error)[:300], search_query=search_query,
         )
     llm_ms = (time.perf_counter() - llm_started) * 1000
     cited_ids = ID_PATTERN.findall(result.text)
@@ -145,6 +164,7 @@ def answer_without_log(question, searcher, llm, top_k):
         else:
             status, text = "answered", result.text
     return Answer(
-        status, text, retrieved_ids, cited_ids, result.tokens_in, result.tokens_out,
+        status, text, retrieved_ids, cited_ids,
+        result.tokens_in + rewrite_in, result.tokens_out + rewrite_out,
         result.text, search_ms=search_ms, llm_ms=llm_ms, search_query=search_query,
     )

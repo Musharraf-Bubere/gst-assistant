@@ -114,3 +114,6 @@ A: I wrote a separate set with everyday words that are not in the glossary and r
 
 **Q: What is the weakest part of your system?**
 A: Everyday Indian words that the notifications don't use. On a fresh test of eight such words, retrieval found the right card only once. I found this by writing a test after I'd fixed the earlier failures, because those scores were flattered. Six failures were an honest "not found", but one cited the wrong card. I'm comparing a hand-made glossary against letting the LLM rewrite the question, on a frozen test set.
+
+**Q: Why not just rewrite every query with the LLM?**
+A: It costs an extra call per question in time, tokens and rate limit, and a bad rewrite can mislead the search. I put the attack rules before it, used its output only as search text, made it fall back to the original question on failure, and compared it with a hand-made glossary on a test set that I froze before building it. (Fill in the scores.)
