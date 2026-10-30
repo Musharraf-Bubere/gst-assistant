@@ -25,8 +25,9 @@ def rewrite_query(question, llm):
     except Exception:
         return question, 0, 0
     text = " ".join(result.text.split())
-    if text.lower().startswith("rewrite:"):
-        text = text[len("rewrite:"):].strip()
+    for label in ("rewrite:", "question:"):
+        if text.lower().startswith(label):
+            text = text[len(label):].strip()
     if not text or len(text) > MAX_LENGTH:
         return question, result.tokens_in, result.tokens_out
     return text, result.tokens_in, result.tokens_out
