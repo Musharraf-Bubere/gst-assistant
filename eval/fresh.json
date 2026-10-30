@@ -1,0 +1,12 @@
+[
+  {"id": "f01", "question": "GST on nimbu", "type": "answer", "expected_ids": ["CT-10-2025:-:48"], "expected": "exempt", "note": "lemons, in the citrus fruit row"},
+  {"id": "f02", "question": "Is kela taxable?", "type": "answer", "expected_ids": ["CT-10-2025:-:46"], "expected": "exempt", "note": "bananas"},
+  {"id": "f03", "question": "GST on gobhi", "type": "answer", "expected_ids": ["CT-10-2025:-:30"], "expected": "exempt", "note": "cauliflower"},
+  {"id": "f04", "question": "Do I pay GST on pyaz?", "type": "answer", "expected_ids": ["CT-10-2025:-:29"], "expected": "exempt", "note": "onions"},
+  {"id": "f05", "question": "GST on aloo", "type": "answer", "expected_ids": ["CT-10-2025:-:27"], "expected": "exempt", "note": "potatoes"},
+  {"id": "f06", "question": "GST on nariyal", "type": "answer", "expected_ids": ["CT-10-2025:-:43"], "expected": "exempt", "note": "coconuts"},
+  {"id": "f07", "question": "GST on kaju", "type": "answer", "expected_ids": ["CT-09-2025:I:22"], "expected": "5%", "note": "cashew nuts"},
+  {"id": "f08", "question": "Is namak taxable?", "type": "answer", "expected_ids": ["CT-10-2025:-:109"], "expected": "exempt", "note": "salt"},
+  {"id": "f09", "question": "GST on mombatti", "type": "answer", "expected_ids": ["CT-09-2025:I:253"], "expected": "5%", "note": "candles"},
+  {"id": "f10", "question": "GST on chhata", "type": "answer", "expected_ids": ["CT-09-2025:I:395"], "expected": "5%", "note": "umbrellas"}
+]

@@ -234,3 +234,15 @@ Add a new entry whenever I choose between options or change a decision.
 - Chose: retry twice with a 20 second wait on 429 only (other errors raise at once), a new status "error" with a polite message, a 4 second pause in the exam, and errors reported separately from failures.
 - Observed: refused and not-found questions never call Gemini, so the guards keep working when the model is unavailable.
 - Production note: a free quota will limit real users. Options to evaluate later: answer caching for repeated questions, a per-user request limit, a paid plan.
+
+## D41. Generalization test for the glossary (Oct 2026)
+- After the glossary and CGST fix: practice 22 of 22, held-out 10 of 10, guards 6 of 6, hard 16 of 16 (retrieval 14 of 14). No errors.
+- Because the glossary was written after seeing the hard-set failures, those scores are not a fair test of it. eval/hard_own.json uses 8 everyday words outside the glossary (paan, chai patti, anda, murmura, patang, incense sticks, sabudana, jhadu).
+- Rule: record the first score before changing anything. Fixing failures by extending the glossary is allowed, but then the set is used up and a new one is needed.
+- Idea to compare later: let the LLM rewrite the query instead of a hand-made glossary (more flexible, but costs a call and adds latency).
+
+## D42. The fair test showed weak generalization (Oct 2026)
+- On eval/hard_own.json (8 everyday words not in the glossary) retrieval was 1 of 8 and answers 1 of 8. The earlier 100 percent scores were on sets we had tuned on.
+- 6 of 7 failures were an honest "not found". One (jhadu) cited the card for the raw material and said exempt, right by luck and wrong in reasoning. The inspector cannot catch a real but wrong card; the expected-id check did.
+- Causes: the English-only embedding model does not understand these words (0 of 8 on vector search), keyword search needs identical words, the glossary only covers the words I wrote. The same generic cards (CT-10-2025:-:131, I:437, I:514, VI:1, VI:2) appear when the model does not understand the question.
+- Plan: compare A (extended glossary), B (LLM query rewriting) and both on a frozen set, eval/fresh.json, run once per approach.

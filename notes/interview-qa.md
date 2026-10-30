@@ -108,3 +108,9 @@ A: My hard test set showed that "atta", "moong dal" and "supari" found nothing, 
 
 **Q: What happens when the LLM provider is rate-limited or down?**
 A: The model call retries twice on a 429 with a wait, and if it still fails the app returns a polite "busy" message with status error instead of crashing. Questions that the guards refuse never call the model, so they still work. My evaluation reports errors separately from failures, so an outage cannot look like a quality problem.
+
+**Q: How do you know the glossary is not just memorizing your failures?**
+A: I wrote a separate set with everyday words that are not in the glossary and recorded the score on the first run, before changing anything. Then I compared the glossary with letting the LLM rewrite the query. (Fill in the numbers once measured.)
+
+**Q: What is the weakest part of your system?**
+A: Everyday Indian words that the notifications don't use. On a fresh test of eight such words, retrieval found the right card only once. I found this by writing a test after I'd fixed the earlier failures, because those scores were flattered. Six failures were an honest "not found", but one cited the wrong card. I'm comparing a hand-made glossary against letting the LLM rewrite the question, on a frozen test set.
