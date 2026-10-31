@@ -12,6 +12,7 @@ path = sys.argv[1] if len(sys.argv) > 1 else "eval/fresh.json"
 repeats = int(sys.argv[2]) if len(sys.argv) > 2 else 5
 with open(path, encoding="utf-8") as file:
     questions = json.load(file)
+top_k = int(sys.argv[3]) if len(sys.argv) > 3 else 5
 
 searcher = Searcher(load_records())
 llm = get_llm()
@@ -30,7 +31,7 @@ for item in questions:
         if tokens_in == 0:
             failures += 1
         searches.add(query)
-        retrieved = [r["id"] for r, score in searcher.hybrid.search(query, top_k=5)]
+        retrieved = [r["id"] for r, score in searcher.hybrid.search(query, top_k=top_k)]
         if all(card_id in retrieved for card_id in item["expected_ids"]):
             hits += 1
         time.sleep(PAUSE_SECONDS)

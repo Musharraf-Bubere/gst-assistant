@@ -329,3 +329,11 @@ Add a new entry whenever I choose between options or change a decision.
 - The cache lives in one program's memory, so it does not help between separate command runs. It helps inside a running server.
 - A single exam run can pass by luck. Added scripts/stability.py: repeat the rewrite and search 5 times per question with the cache cleared, and count how often the right card is in the top 5.
 - Options to test afterwards: two separate searches (original and rewrite) fused by the vote, top 8 cards to the LLM, a persistent rewrite cache.
+
+## D49. Stability measured: 44 of 50 (Oct 2026)
+
+- On eval/fresh.json with 5 repeats per question, the right card was in the top 5 in 44 of 50 runs (88 percent). Unstable: nimbu 2/5 and nariyal 2/5. Both sit among near-identical "fresh fruit" cards.
+- The earlier 10 of 10 was optimistic. Quote about 88 percent for retrieval on this kind of question, not 100.
+- Rewrites varied for 6 of 10 questions but only the crowded ones failed, so variation alone is not the problem.
+- Hypothesis: extra words like "fresh" or "fruit" in the rewrite make many similar cards compete and push the right one past rank 5.
+- eval/fresh2.json is frozen (7 of 10 in the crowded produce group). Experiments in this order: top 8 cards, then a rewrite prompt that adds product names only, then run fresh2 once.

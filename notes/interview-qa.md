@@ -126,3 +126,6 @@ A: I timed each stage separately. My own search took 17 to 42 ms; the two Gemini
 
 **Q: How do you deal with non-determinism in an LLM pipeline?**
 A: Temperature 0 does not guarantee identical output. My query rewrite once gave two different rewrites for the same question, and one led to a "not found". So I added a stability test that repeats the rewrite and search several times and counts how often the right card is retrieved, and I treat a single passing run as weak evidence.
+
+**Q: How reliable is your retrieval, really?**
+A: I measured it by repeating each rewrite and search five times with the cache cleared: the right card was in the top 5 in 44 of 50 runs. A single exam run had given 10 of 10, which was partly luck. The weak spot is groups of near-identical cards, like fresh fruits, where small changes in the LLM rewrite can push the right card out of the top results.

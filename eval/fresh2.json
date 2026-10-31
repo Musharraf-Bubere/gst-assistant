@@ -1,0 +1,12 @@
+[
+  {"id": "g01", "question": "GST on angoor", "type": "answer", "expected_ids": ["CT-10-2025:-:49"], "expected": "exempt", "note": "grapes"},
+  {"id": "g02", "question": "Is seb taxable?", "type": "answer", "expected_ids": ["CT-10-2025:-:51"], "expected": "exempt", "note": "apples"},
+  {"id": "g03", "question": "GST on aam", "type": "answer", "expected_ids": ["CT-10-2025:-:47"], "expected": "exempt", "note": "mangoes"},
+  {"id": "g04", "question": "GST on tarbooz", "type": "answer", "expected_ids": ["CT-10-2025:-:50"], "expected": "exempt", "note": "watermelons"},
+  {"id": "g05", "question": "Do I pay GST on kheera?", "type": "answer", "expected_ids": ["CT-10-2025:-:33"], "expected": "exempt", "note": "cucumbers"},
+  {"id": "g06", "question": "GST on gajar", "type": "answer", "expected_ids": ["CT-10-2025:-:32"], "expected": "exempt", "note": "carrots"},
+  {"id": "g07", "question": "GST on mooli", "type": "answer", "expected_ids": ["CT-10-2025:-:32"], "expected": "exempt", "note": "radishes, same card as carrots"},
+  {"id": "g08", "question": "GST on bijli", "type": "answer", "expected_ids": ["CT-10-2025:-:111"], "expected": "exempt", "note": "electricity"},
+  {"id": "g09", "question": "GST on chawal", "type": "answer", "expected_ids": ["CT-09-2025:I:48", "CT-10-2025:-:67"], "expected": "exempt", "note": "rice; two cards, loose exempt and packaged 5%"},
+  {"id": "g10", "question": "GST on makhan", "type": "answer", "expected_ids": ["CT-09-2025:I:7"], "expected": "5%", "note": "butter"}
+]
