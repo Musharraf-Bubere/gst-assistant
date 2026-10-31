@@ -120,3 +120,6 @@ A: It costs an extra call per question in time, tokens and rate limit, and a bad
 
 **Q: What improved your system most, and how do you know?**
 A: Letting the LLM translate everyday Indian words into the notification's wording before searching. I froze a test of 10 unseen words before building it. A hand-made glossary scored 0 of 10 on it, and the LLM rewrite scored 10 of 10. It also showed limits, such as the rewrite inventing a non-word, and two remaining failures that I'm treating as separate experiments, not as proof that it's solved.
+
+**Q: What did you have to change to run it as a web service?**
+A: A web server handles requests on several threads, and my SQLite logbook connection was tied to one thread. I allowed the connection to be shared and protected every write with a lock, and I tested it with four threads writing at once. The searcher, model and logbook are created once at start-up so each request doesn't pay that cost.

@@ -259,3 +259,13 @@ Add a new entry whenever I choose between options or change a decision.
 - Bugs and noise seen: Gemini copied the "Question:" label into the search text; it also invented a non-word ("porita"). Labels are stripped; noise is tolerated because search plus answer checks follow.
 - Open problems (development items, not for the fresh set): (1) RRF let cards found by both lists beat the exact "agarbatti" card; (2) the answering step does not know that murmura means puffed rice because it sees only the original question.
 - Next: regression runs in "both" mode, then make "both" the default if the old scores hold.
+
+## D45. Default search mode is "both"; cost measured (Oct 2026)
+- Regression in both mode: practice 22/22, hard 16/16, guards 6/6, held-out 10/10, same as before.
+- Cost of the extra rewrite call: about 15 to 20 percent more input tokens (roughly 130 to 170 per question). Time per question not measured yet.
+- Why "both": the glossary is free and exact and still works when the rewrite call fails or is rate limited.
+
+## D46. Web API with FastAPI (Oct 2026)
+- Windows: /health, /ask (status, answer, cards, time, request_id) and /feedback (thumbs up or down).
+- The searcher, model and logbook are built once at start-up. The logbook connection is shared across threads with a lock, tested with 4 threads and 200 writes.
+- Not yet: authentication, request limits, CORS settings. Local use only until they are added.

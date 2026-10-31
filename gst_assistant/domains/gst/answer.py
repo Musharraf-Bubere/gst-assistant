@@ -46,6 +46,7 @@ class Answer:
     total_ms: float = 0.0
     request_id: int = 0
     search_query: str = ""
+    rewrite_ms: float = 0.0
 
 
 def load_records(path="data/processed/records.json"):
@@ -122,14 +123,17 @@ def answer_without_log(question, searcher, llm, top_k, mode):
     if message:
         return Answer("refused", message)
 
+    rewrite_started = time.perf_counter()
     search_query, rewrite_in, rewrite_out = build_search_query(question, searcher, llm, mode)
+    rewrite_ms = (time.perf_counter() - rewrite_started) * 1000
+
     search_started = time.perf_counter()
     best_similarity = searcher.vector.search(search_query, top_k=1)[0][1]
     message = check_similarity(best_similarity)
     if message:
         return Answer(
             "not_found", message, tokens_in=rewrite_in, tokens_out=rewrite_out,
-            search_query=search_query,
+            rewrite_ms=rewrite_ms, search_query=search_query,
         )
 
     hits = searcher.hybrid.search(search_query, top_k=top_k)
@@ -139,7 +143,7 @@ def answer_without_log(question, searcher, llm, top_k, mode):
     if not records:
         return Answer(
             "not_found", NOT_FOUND, retrieved_ids, tokens_in=rewrite_in, tokens_out=rewrite_out,
-            search_ms=search_ms, search_query=search_query,
+            search_ms=search_ms, rewrite_ms=rewrite_ms, search_query=search_query,
         )
 
     cards = "\n\n".join(format_card(record) for record in records)
@@ -150,7 +154,8 @@ def answer_without_log(question, searcher, llm, top_k, mode):
     except Exception as error:
         return Answer(
             "error", BUSY, retrieved_ids, tokens_in=rewrite_in, tokens_out=rewrite_out,
-            search_ms=search_ms, raw_text=str(error)[:300], search_query=search_query,
+            search_ms=search_ms, rewrite_ms=rewrite_ms, raw_text=str(error)[:300],
+            search_query=search_query,
         )
     llm_ms = (time.perf_counter() - llm_started) * 1000
     cited_ids = ID_PATTERN.findall(result.text)
@@ -166,5 +171,6 @@ def answer_without_log(question, searcher, llm, top_k, mode):
     return Answer(
         status, text, retrieved_ids, cited_ids,
         result.tokens_in + rewrite_in, result.tokens_out + rewrite_out,
-        result.text, search_ms=search_ms, llm_ms=llm_ms, search_query=search_query,
+        result.text, search_ms=search_ms, llm_ms=llm_ms, rewrite_ms=rewrite_ms,
+        search_query=search_query,
     )
