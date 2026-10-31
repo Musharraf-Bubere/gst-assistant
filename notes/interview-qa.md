@@ -3,13 +3,13 @@
 Rewrite each answer in your own words before an interview. Say it out loud.
 
 ## Project
+
 **Q: Why did you build this?**
 A: I studied for CMA for 3 years, and tax and GST rules kept changing through amendments, so keeping up was hard. I built an assistant that answers GST questions with the latest rule, source notification and date.
 
 **Q: Why RAG and not fine-tuning?**
 A: Rules change often. With RAG I update the documents, not the model. It also lets me show the source for every answer.
 
-## Design decisions
 **Q: How does it handle rule changes?**
 A: Every chunk has metadata: notification number, effective date, status (active or superseded). Search filters to active rules and prefers the newest. Example: GST 2.0 took effect on 22 Sept 2025 and replaced the old rate structure.
 
@@ -37,21 +37,18 @@ A: The same heading can have different rates depending on the description. In no
 **Q: What are the limits of keyword search?**
 A: It matches words, not meaning. For "ginger" it returned the row "Ginger other than fresh ginger" at 5%. Fresh ginger is actually exempt under notification 10/2025. That is why I am adding the exemption notification, semantic search, guardrails and trap questions in my evaluation set.
 
-## Domain gotchas I found
 **Q: What surprised you in the source documents?**
 A: The CGST notification lists half rates (2.5%, 9%, 20%), while users ask for the full GST rate (5%, 18%, 40%). The IGST notification has the full rate, so I use it as the main source and CGST to cross-check.
 
 **Q: Which documents are complete and which are amendments?**
 A: 9/2025 and 10/2025 are complete replacements of the 2017 goods notifications. 15/2025 and 16/2025 only amend the older service notifications 11/2017 and 12/2017, so services need base plus amendments. Corrigenda are also part of the legal text.
 
-## Quality and safety
 **Q: How do you reduce wrong answers?**
 A: Guardrails: refuse out-of-scope questions, say "I couldn't find this" when nothing relevant is retrieved, require a citation, and check that any rate in the answer appears in the retrieved text.
 
 **Q: How do you evaluate it?**
 A: A test set of 30-50 questions with correct answers and sources, including questions that should get "I don't know". I measure retrieval hit rate, answer correctness and citation correctness after every change.
 
-## Bugs and fixes
 **Q: Tell me about something that broke.**
 A: Pushing to GitHub failed with a 403 error. I had two GitHub accounts logged in and the wrong one was active. Checking `gh auth status` showed it, and `gh auth switch` fixed it.
 
@@ -123,3 +120,9 @@ A: Letting the LLM translate everyday Indian words into the notification's wordi
 
 **Q: What did you have to change to run it as a web service?**
 A: A web server handles requests on several threads, and my SQLite logbook connection was tied to one thread. I allowed the connection to be shared and protected every write with a lock, and I tested it with four threads writing at once. The searcher, model and logbook are created once at start-up so each request doesn't pay that cost.
+
+**Q: How did you find and handle latency?**
+A: I timed each stage separately. My own search took 17 to 42 ms; the two Gemini calls took almost all of the roughly 2 seconds. One request took 9.5 seconds because a model call was slow, so I plan timeouts and monitoring of the slowest requests. I cache the rewrite step, which is safe because it stores only search words, not answers. I have not adopted riskier options, like skipping the rewrite, until I can measure them on the test sets.
+
+**Q: How do you deal with non-determinism in an LLM pipeline?**
+A: Temperature 0 does not guarantee identical output. My query rewrite once gave two different rewrites for the same question, and one led to a "not found". So I added a stability test that repeats the rewrite and search several times and counts how often the right card is retrieved, and I treat a single passing run as weak evidence.

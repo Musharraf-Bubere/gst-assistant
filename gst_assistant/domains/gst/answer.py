@@ -79,19 +79,19 @@ class Searcher:
 
 def format_card(record):
     if record["treatment"] == "exempt":
-        rate = "exempt (no GST)"
+        treatment = "exempt (no GST)"
     else:
         total = str(record["gst_rate"])
         half = str(record["cgst_rate"])
-        rate = (
-            total + "% GST in total (CGST " + half + "% + SGST " + half
+        treatment = (
+            "taxable, " + total + "% GST in total (CGST " + half + "% + SGST " + half
             + "% within a state, IGST " + total + "% between states)"
         )
     return (
         "id: " + record["id"] + "\n"
         "code: " + record["hsn_text"] + "\n"
         "description: " + record["description"][:MAX_DESCRIPTION] + "\n"
-        "treatment: " + record["treatment"] + ", " + rate + "\n"
+        "treatment: " + treatment + "\n"
         "source: notification " + record["notification"]
         + ", effective " + record["effective_from"]
     )
