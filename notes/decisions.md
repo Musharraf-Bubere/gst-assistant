@@ -337,3 +337,21 @@ Add a new entry whenever I choose between options or change a decision.
 - Rewrites varied for 6 of 10 questions but only the crowded ones failed, so variation alone is not the problem.
 - Hypothesis: extra words like "fresh" or "fruit" in the rewrite make many similar cards compete and push the right one past rank 5.
 - eval/fresh2.json is frozen (7 of 10 in the crowded produce group). Experiments in this order: top 8 cards, then a rewrite prompt that adds product names only, then run fresh2 once.
+
+## D50. Top 8 cards fixes crowding in retrieval (Oct 2026)
+
+- Stability at top 8 instead of top 5: fresh 44/50 to 50/50 (nimbu and nariyal now 5/5), hard_own 35/40 (incense and murmura now 5/5).
+- Cost: roughly 300 to 450 more input tokens per question. Adoption waits for an answer-level check of accuracy and tokens.
+- Jhadu stays 0/5 with a single search, so it is a fixed retrieval problem, not variability.
+
+## D51. Stemming in keyword search (Oct 2026)
+
+- Hypothesis: "broom" (from the rewrite) does not match "brooms" (the card), so the raw-material card with "broom sticks" wins. Fix: Snowball stemmer on both cards and queries, applied after stop-word removal.
+- Check: retrieval_summary before and after on five sets (no LLM calls); any older set that gets worse blocks adoption until the changed question is understood.
+
+## D52. Stemming fixed the jhadu failure (Oct 2026)
+
+- Before: jhadu 0/5 with one fixed search. After stemming: hard_own stability 40 of 40 at top 8.
+- Free retrieval summary before and after on five sets: unchanged for practice, held-out, hard and fresh. Keyword alone lost one question on hard_own (2 to 1, cause not yet identified); hybrid unchanged.
+- hard_own is a development set; the generalization check is the frozen fresh2, run once at the end.
+- Next: answer-level check of top 8 (accuracy and tokens), then fresh2 once, then stop tuning retrieval and build the UI and deployment.

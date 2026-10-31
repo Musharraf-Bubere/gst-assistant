@@ -129,3 +129,9 @@ A: Temperature 0 does not guarantee identical output. My query rewrite once gave
 
 **Q: How reliable is your retrieval, really?**
 A: I measured it by repeating each rewrite and search five times with the cache cleared: the right card was in the top 5 in 44 of 50 runs. A single exam run had given 10 of 10, which was partly luck. The weak spot is groups of near-identical cards, like fresh fruits, where small changes in the LLM rewrite can push the right card out of the top results.
+
+**Q: Give an example of finding the cause of a retrieval failure.**
+A: One question failed in every run with the same search, so it was not randomness. The rewrite said "broom" but the notification says "brooms", and keyword search compares exact words, so a different card that contained "broom sticks" won. I added stemming and verified the change with a retrieval summary on five test sets before and after.
+
+**Q: How do you decide when to stop tuning?**
+A: I keep a frozen test set that I run once at the end, and I stop when the remaining failures are small and well understood, and when the product still needs a UI, deployment and documentation. My retrieval went from 1 of 8 to a stable result on unseen everyday words through measured steps: an LLM rewrite, more cards, and stemming. I report the numbers from the frozen set, not from the sets I tuned on.

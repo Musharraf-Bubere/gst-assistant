@@ -1,7 +1,8 @@
-"""Keyword search (BM25) over a list of records, with simple typo correction."""
+"""Keyword search (BM25) over a list of records, with stemming and simple typo correction."""
 import difflib
 import re
 
+from py_rust_stemmers import SnowballStemmer
 from rank_bm25 import BM25Okapi
 
 STOP_WORDS = {
@@ -11,10 +12,13 @@ STOP_WORDS = {
     "from", "that", "this", "about", "entry",
 }
 
+_stemmer = SnowballStemmer("english")
+
 
 def tokenize(text, stop_words=frozenset()):
+    """Lowercase, drop stop words, then cut each word to its stem (brooms and broom match)."""
     words = re.findall(r"[a-z0-9]+", text.lower())
-    return [word for word in words if word not in stop_words]
+    return [_stemmer.stem_word(word) for word in words if word not in stop_words]
 
 
 class KeywordIndex:

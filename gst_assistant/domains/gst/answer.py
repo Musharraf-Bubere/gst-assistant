@@ -97,7 +97,7 @@ def format_card(record):
     )
 
 
-def answer_question(question, searcher, llm, top_k=5, logbook=None, mode="both"):
+def answer_question(question, searcher, llm, top_k=8, logbook=None, mode="both"):
     started = time.perf_counter()
     answer = answer_without_log(question, searcher, llm, top_k, mode)
     answer.total_ms = (time.perf_counter() - started) * 1000
