@@ -135,3 +135,6 @@ A: One question failed in every run with the same search, so it was not randomne
 
 **Q: How do you decide when to stop tuning?**
 A: I keep a frozen test set that I run once at the end, and I stop when the remaining failures are small and well understood, and when the product still needs a UI, deployment and documentation. My retrieval went from 1 of 8 to a stable result on unseen everyday words through measured steps: an LLM rewrite, more cards, and stemming. I report the numbers from the frozen set, not from the sets I tuned on.
+
+**Q: What does the retrieval depth (how many cards) cost?**
+A: Sending 8 cards instead of 5 added roughly 30 to 45 percent more input tokens per question, about 300 to 400 tokens, with the same output. In exchange, a stability test of the retrieval step rose from 44 to 50 of 50 runs on one set. I decided by comparing accuracy and cost on the same sets, and I'd revisit the number when real usage data exists.

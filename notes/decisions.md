@@ -355,3 +355,12 @@ Add a new entry whenever I choose between options or change a decision.
 - Free retrieval summary before and after on five sets: unchanged for practice, held-out, hard and fresh. Keyword alone lost one question on hard_own (2 to 1, cause not yet identified); hybrid unchanged.
 - hard_own is a development set; the generalization check is the frozen fresh2, run once at the end.
 - Next: answer-level check of top 8 (accuracy and tokens), then fresh2 once, then stop tuning retrieval and build the UI and deployment.
+
+## D53. Keep 8 cards (Oct 2026)
+
+- Answers: hard_own 6/8 to 8/8, hard 15/15 scored, practice 22/22. Input tokens per question rose about 30 to 45 percent (roughly 300 to 400 tokens); output unchanged.
+- hard_own is a development set; the frozen fresh2 gives the unbiased number.
+
+## D54. Transient provider errors (Oct 2026)
+
+- A 503 UNAVAILABLE (service briefly down) appeared during evaluation. It was reported as an error, not a failure. Retry now covers 429 and 503 with a wait; other errors fail at once.

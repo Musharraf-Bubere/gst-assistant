@@ -22,8 +22,13 @@ class LLMResponse:
     tokens_out: int
 
 
-def is_rate_limit(error):
-    return getattr(error, "code", None) == 429 or "429" in str(error)
+RETRYABLE = (429, 503)
+
+
+def is_retryable(error):
+    """True for rate limits (429) and temporary outages (503)."""
+    code = getattr(error, "code", None)
+    return code in RETRYABLE or any(str(number) in str(error) for number in RETRYABLE)
 
 
 class GeminiLLM:
@@ -44,7 +49,7 @@ class GeminiLLM:
                 )
                 break
             except Exception as error:
-                if not is_rate_limit(error) or attempt == RETRIES:
+                if not is_retryable(error) or attempt == RETRIES:
                     raise
                 time.sleep(WAIT_SECONDS)
         usage = response.usage_metadata
