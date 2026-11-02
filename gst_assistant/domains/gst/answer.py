@@ -4,7 +4,7 @@ import time
 from dataclasses import dataclass, field
 
 from gst_assistant.core.hybrid import HybridIndex
-from gst_assistant.core.search import STOP_WORDS, KeywordIndex
+from gst_assistant.core.search import STOP_WORDS, KeywordIndex, tokenize
 from gst_assistant.core.vector_search import VectorIndex
 from gst_assistant.domains.gst.glossary import expand_query, load_glossary
 from gst_assistant.domains.gst.guards import (
@@ -108,19 +108,26 @@ def answer_question(question, searcher, llm, top_k=8, logbook=None, mode="both")
     return answer
 
 
+def rewrite_added_known_word(question, rewritten_query, searcher):
+    """True if the rewrite added at least one word that appears in the cards."""
+    stop = STOP_WORDS | GST_STOP_WORDS
+    before = set(tokenize(question, stop))
+    added = [word for word in tokenize(rewritten_query, stop) if word not in before]
+    return any(word in searcher.keyword.vocabulary_set for word in added)
+
+
 def build_search_query(question, searcher, llm, mode):
-    """Return the text to search with, the tokens used to build it, and whether the LLM rewrote it."""
+    """Return the search text, the tokens used to build it, and whether the rewrite helped."""
     query = question
     tokens_in = 0
     tokens_out = 0
-    rewritten = False
+    helped = False
     if mode in ("rewrite", "both"):
         query, tokens_in, tokens_out = rewrite_query(question, llm)
-        rewritten = query != question
+        helped = rewrite_added_known_word(question, query, searcher)
     if mode in ("glossary", "both"):
         query = expand_query(query, searcher.glossary)
-    return query, tokens_in, tokens_out, rewritten
-
+    return query, tokens_in, tokens_out, helped
 
 def answer_without_log(question, searcher, llm, top_k, mode):
     message = check_input(question)
@@ -128,7 +135,7 @@ def answer_without_log(question, searcher, llm, top_k, mode):
         return Answer("refused", message)
 
     rewrite_started = time.perf_counter()
-    search_query, rewrite_in, rewrite_out, rewritten = build_search_query(question, searcher, llm, mode)
+    search_query, rewrite_in, rewrite_out, helped = build_search_query(question, searcher, llm, mode)
     rewrite_ms = (time.perf_counter() - rewrite_started) * 1000
 
     search_started = time.perf_counter()
@@ -140,7 +147,7 @@ def answer_without_log(question, searcher, llm, top_k, mode):
             rewrite_ms=rewrite_ms, search_query=search_query,
         )
 
-    hits = searcher.hybrid.search(search_query, top_k=top_k, fix_typos=not rewritten)
+    hits = searcher.hybrid.search(search_query, top_k=top_k, fix_typos=not helped)
     search_ms = (time.perf_counter() - search_started) * 1000
     records = [record for record, score in hits]
     retrieved_ids = [record["id"] for record in records]

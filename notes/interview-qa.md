@@ -141,3 +141,6 @@ A: Sending 8 cards instead of 5 added roughly 30 to 45 percent more input tokens
 
 **Q: Tell me about a time your system gave a confident wrong answer.**
 A: Asked about "makhan" (butter), it answered about makhana (fox nuts) with citations. My own typo corrector had changed the real word into a similar one, so the wrong cards ranked first. My checks passed because the cited cards were real and retrieved, and only my frozen test, which knows the expected card, caught it. I changed the pipeline so typo correction only runs when the LLM rewrite fails, and I list this kind of error as a known limitation.
+
+**Q: Did any fix of yours break something else?**
+A: Yes. Disabling typo correction after the LLM rewrite fixed a case where "makhan" (butter) was turned into "makhana", but it broke "papad", which the card spells "pappad". My older test sets caught it. I replaced the on/off switch with a rule: trust the rewrite only if it added a word that appears in the cards, otherwise allow correction. It is a heuristic, and I measure it on held-back questions instead of assuming it works.

@@ -19,3 +19,6 @@
 | Stability, fresh set, top 5 | 5 repeats per question | 44/50 retrieval |
 | Stability, fresh set, top 8 | 5 repeats per question | 50/50 retrieval |
 | Full system, top 8 (before the two fixes) | fresh2 (frozen, run once) | 8/10 (failed: g02 seb, g10 makhan) |
+| Full system after SEARCH TERMS and no typo fix after rewrite | fresh2 (now development) | 10/10 |
+| same | hard (development) | 15/16 (k11 papad regressed) |
+| same | practice | 22/22 |

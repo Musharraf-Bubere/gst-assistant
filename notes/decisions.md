@@ -370,3 +370,9 @@ Add a new entry whenever I choose between options or change a decision.
 - g02 (seb): the right card was retrieved first but the answer step said "not found", because it saw only the original question. Fix: pass SEARCH TERMS to the answer step, facts only from cards.
 - g10 (makhan): a real Hindi word was "corrected" by my typo corrector into a different product (makhana), and the app answered confidently about the wrong product. The inspector cannot catch a real but wrong card. Fix: skip typo correction after a successful LLM rewrite; keep it as a backup when the rewrite fails.
 - fresh2 is now a development set. fresh3 (10 new questions, ids checked in the PDFs) is frozen and run once after the fixes.
+
+## D56. A fix that caused a regression, and a smarter rule (Oct 2026)
+- Turning typo correction off after a rewrite fixed makhan (butter, wrongly corrected to makhana) but broke papad (the card says pappad; the rewrite said papadum). The regression was caught by the hard set.
+- New rule: after a rewrite, skip typo correction only if the rewrite added at least one word that appears in the cards (the rewrite understood). Otherwise allow correction (the rewrite did not help, or failed).
+- It is a heuristic. Checked on hard, fresh2 and practice, then fresh3 is run once.
+- Side effect measured: the SEARCH TERMS line and rule added about 5 to 7 percent more input tokens.
