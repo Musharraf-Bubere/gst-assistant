@@ -144,3 +144,6 @@ A: Asked about "makhan" (butter), it answered about makhana (fox nuts) with cita
 
 **Q: Did any fix of yours break something else?**
 A: Yes. Disabling typo correction after the LLM rewrite fixed a case where "makhan" (butter) was turned into "makhana", but it broke "papad", which the card spells "pappad". My older test sets caught it. I replaced the on/off switch with a rule: trust the rewrite only if it added a word that appears in the cards, otherwise allow correction. It is a heuristic, and I measure it on held-back questions instead of assuming it works.
+
+**Q: Why does the page call the pipeline directly instead of the API?**
+A: One program and one container is simpler to deploy and debug at this stage. I kept the FastAPI service in the project as an integration path for other tools. The trade-off is that the page and the engine can't be scaled separately, which is fine for this stage.

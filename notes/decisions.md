@@ -376,3 +376,8 @@ Add a new entry whenever I choose between options or change a decision.
 - New rule: after a rewrite, skip typo correction only if the rewrite added at least one word that appears in the cards (the rewrite understood). Otherwise allow correction (the rewrite did not help, or failed).
 - It is a heuristic. Checked on hard, fresh2 and practice, then fresh3 is run once.
 - Side effect measured: the SEARCH TERMS line and rule added about 5 to 7 percent more input tokens.
+
+## D57. Stop tuning retrieval; ship the interface (Oct 2026)
+- Final system: rewrite plus glossary, stemming, top 8 cards, typo correction only when the rewrite adds no known word, SEARCH TERMS passed to the answer step. fresh3 (frozen, run once): 10 of 10.
+- Limits to document: small food-heavy test sets written by the developer, single Hindi words, no services, corrigenda not applied, IGST not used, about 2 s per question, answers can be wordy, real but wrong card answers cannot be caught by the output checks.
+- Next: Streamlit page (pipeline in the same process), Docker, deployment, README with honest results and limitations.

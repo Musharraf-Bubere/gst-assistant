@@ -22,3 +22,7 @@
 | Full system after SEARCH TERMS and no typo fix after rewrite | fresh2 (now development) | 10/10 |
 | same | hard (development) | 15/16 (k11 papad regressed) |
 | same | practice | 22/22 |
+| Full system after the trust-the-rewrite rule | hard | 16/16 |
+| same | fresh2 (development) | 10/10 |
+| same | practice | 22/22 |
+| same | fresh3 (frozen, run once) | 10/10 |
