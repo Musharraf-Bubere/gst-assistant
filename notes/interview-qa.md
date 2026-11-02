@@ -138,3 +138,6 @@ A: I keep a frozen test set that I run once at the end, and I stop when the rema
 
 **Q: What does the retrieval depth (how many cards) cost?**
 A: Sending 8 cards instead of 5 added roughly 30 to 45 percent more input tokens per question, about 300 to 400 tokens, with the same output. In exchange, a stability test of the retrieval step rose from 44 to 50 of 50 runs on one set. I decided by comparing accuracy and cost on the same sets, and I'd revisit the number when real usage data exists.
+
+**Q: Tell me about a time your system gave a confident wrong answer.**
+A: Asked about "makhan" (butter), it answered about makhana (fox nuts) with citations. My own typo corrector had changed the real word into a similar one, so the wrong cards ranked first. My checks passed because the cited cards were real and retrieved, and only my frozen test, which knows the expected card, caught it. I changed the pipeline so typo correction only runs when the LLM rewrite fails, and I list this kind of error as a known limitation.

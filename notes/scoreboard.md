@@ -18,3 +18,4 @@
 | Full system | fresh2 (frozen, run once) | fill in |
 | Stability, fresh set, top 5 | 5 repeats per question | 44/50 retrieval |
 | Stability, fresh set, top 8 | 5 repeats per question | 50/50 retrieval |
+| Full system, top 8 (before the two fixes) | fresh2 (frozen, run once) | 8/10 (failed: g02 seb, g10 makhan) |

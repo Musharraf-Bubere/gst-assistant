@@ -37,8 +37,10 @@ class KeywordIndex:
         matches = difflib.get_close_matches(word, self.vocabulary, n=1, cutoff=0.8)
         return matches[0] if matches else word
 
-    def search(self, query, top_k=5):
-        words = [self.correct(word) for word in tokenize(query, self.stop_words)]
+    def search(self, query, top_k=5, fix_typos=True):
+        words = tokenize(query, self.stop_words)
+        if fix_typos:
+            words = [self.correct(word) for word in words]
         scores = self.bm25.get_scores(words)
         ranked = sorted(range(len(self.records)), key=lambda i: scores[i], reverse=True)
         return [(self.records[i], float(scores[i])) for i in ranked[:top_k] if scores[i] > 0]

@@ -1,0 +1,12 @@
+[
+  {"id": "n01", "question": "GST on anar", "type": "answer", "expected_ids": ["CT-10-2025:-:53"], "expected": "exempt", "note": "pomegranates, in the other-fruit row"},
+  {"id": "n02", "question": "Is santra taxable?", "type": "answer", "expected_ids": ["CT-10-2025:-:48"], "expected": "exempt", "note": "oranges, in the citrus row"},
+  {"id": "n03", "question": "GST on papita", "type": "answer", "expected_ids": ["CT-10-2025:-:50"], "expected": "exempt", "note": "papayas"},
+  {"id": "n04", "question": "GST on shahad", "type": "answer", "expected_ids": ["CT-09-2025:I:10", "CT-10-2025:-:19"], "expected": "exempt", "note": "honey; two cards"},
+  {"id": "n05", "question": "GST on gud", "type": "answer", "expected_ids": ["CT-09-2025:I:106", "CT-10-2025:-:96"], "expected": "exempt", "note": "jaggery; two cards"},
+  {"id": "n06", "question": "GST on sindoor", "type": "answer", "expected_ids": ["CT-10-2025:-:117"], "expected": "exempt", "note": "the notification spells it sindur"},
+  {"id": "n07", "question": "Is kitaab taxable?", "type": "answer", "expected_ids": ["CT-10-2025:-:132"], "expected": "exempt", "note": "printed books"},
+  {"id": "n08", "question": "GST on akhbaar", "type": "answer", "expected_ids": ["CT-10-2025:-:133"], "expected": "exempt", "note": "newspapers"},
+  {"id": "n09", "question": "GST on ghi", "type": "answer", "expected_ids": ["CT-09-2025:I:7"], "expected": "5%", "note": "ghee; a variant spelling"},
+  {"id": "n10", "question": "GST on makkhan", "type": "answer", "expected_ids": ["CT-09-2025:I:7"], "expected": "5%", "note": "butter; a spelling close to makhana, the exact trap of the previous failure"}
+]

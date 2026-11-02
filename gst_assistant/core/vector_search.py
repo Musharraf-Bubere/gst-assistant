@@ -27,7 +27,7 @@ class VectorIndex:
             np.save(cache_path, vectors)
         return vectors
 
-    def search(self, query, top_k=5):
+    def search(self, query, top_k=5, **ignored):
         query_vector = self._embed([query])[0]
         scores = self.vectors @ query_vector
         ranked = np.argsort(-scores)[:top_k]

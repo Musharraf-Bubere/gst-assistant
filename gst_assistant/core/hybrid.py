@@ -18,6 +18,7 @@ class HybridIndex:
         self.indexes = indexes
         self.pool = pool
 
-    def search(self, query, top_k=5):
-        result_lists = [index.search(query, top_k=self.pool) for index in self.indexes]
+    def search(self, query, top_k=5, **options):
+        """options (for example fix_typos=False) go to every search; each uses what it knows."""
+        result_lists = [index.search(query, top_k=self.pool, **options) for index in self.indexes]
         return reciprocal_rank_fusion(result_lists, top_k=top_k)

@@ -364,3 +364,9 @@ Add a new entry whenever I choose between options or change a decision.
 ## D54. Transient provider errors (Oct 2026)
 
 - A 503 UNAVAILABLE (service briefly down) appeared during evaluation. It was reported as an error, not a failure. Retry now covers 429 and 503 with a wait; other errors fail at once.
+
+## D55. Frozen exam fresh2: 8 of 10, and what the two failures taught (Oct 2026)
+- Reported result for the system as it was: 8 of 10 (small and deliberately hard sample).
+- g02 (seb): the right card was retrieved first but the answer step said "not found", because it saw only the original question. Fix: pass SEARCH TERMS to the answer step, facts only from cards.
+- g10 (makhan): a real Hindi word was "corrected" by my typo corrector into a different product (makhana), and the app answered confidently about the wrong product. The inspector cannot catch a real but wrong card. Fix: skip typo correction after a successful LLM rewrite; keep it as a backup when the rewrite fails.
+- fresh2 is now a development set. fresh3 (10 new questions, ids checked in the PDFs) is frozen and run once after the fixes.
