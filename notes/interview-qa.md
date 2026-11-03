@@ -147,3 +147,6 @@ A: Yes. Disabling typo correction after the LLM rewrite fixed a case where "makh
 
 **Q: Why does the page call the pipeline directly instead of the API?**
 A: One program and one container is simpler to deploy and debug at this stage. I kept the FastAPI service in the project as an integration path for other tools. The trade-off is that the page and the engine can't be scaled separately, which is fine for this stage.
+
+**Q: How do you monitor latency?**
+A: With the median and the 95th percentile, not the average, because a few slow requests (for example a rate-limit retry that took 57 seconds) drag the average far above what users normally experience. My live log is kept apart from test runs, so the numbers describe real use.

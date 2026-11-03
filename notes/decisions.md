@@ -381,3 +381,8 @@ Add a new entry whenever I choose between options or change a decision.
 - Final system: rewrite plus glossary, stemming, top 8 cards, typo correction only when the rewrite adds no known word, SEARCH TERMS passed to the answer step. fresh3 (frozen, run once): 10 of 10.
 - Limits to document: small food-heavy test sets written by the developer, single Hindi words, no services, corrigenda not applied, IGST not used, about 2 s per question, answers can be wordy, real but wrong card answers cannot be caught by the output checks.
 - Next: Streamlit page (pipeline in the same process), Docker, deployment, README with honest results and limitations.
+
+## D58. Report medians and percentiles, not averages (Oct 2026)
+- The first report showed an average of 16 s and a maximum of 57 s, which hid the typical 2 s. The log mixed old code versions, rate-limit waits and retries.
+- Now: median, 95th percentile, slowest, plus feedback counts.
+- Test logs and live logs must be separate files.
