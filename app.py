@@ -12,7 +12,7 @@ st.set_page_config(page_title="GST Assistant", page_icon="🧾")
 def load_app():
     records = load_records()
     by_id = {record["id"]: record for record in records}
-    return Searcher(records), get_llm(), LogBook(), by_id
+    return Searcher(records), get_llm(retries=1, wait_seconds=3), LogBook(), by_id
 
 
 searcher, llm, logbook, by_id = load_app()
@@ -58,12 +58,13 @@ if answer:
         if st.session_state.get("feedback_given"):
             st.caption("Thank you for the feedback.")
         else:
-            thumbs_up, thumbs_down, _ = st.columns([1, 1, 6])
-            if thumbs_up.button("👍 Helpful"):
+            st.caption("Was this answer helpful?")
+            thumbs_up, thumbs_down, _ = st.columns([1, 1, 4])
+            if thumbs_up.button("👍"):
                 logbook.set_feedback(answer.request_id, 1)
                 st.session_state["feedback_given"] = True
                 st.rerun()
-            if thumbs_down.button("👎 Not right"):
+            if thumbs_down.button("👎"):
                 logbook.set_feedback(answer.request_id, -1)
                 st.session_state["feedback_given"] = True
                 st.rerun()

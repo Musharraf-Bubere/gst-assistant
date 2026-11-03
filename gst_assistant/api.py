@@ -9,7 +9,7 @@ from gst_assistant.domains.gst.answer import Searcher, answer_question, load_rec
 app = FastAPI(title="GST Assistant")
 
 searcher = Searcher(load_records())
-llm = get_llm()
+llm = get_llm(retries=1, wait_seconds=3)
 logbook = LogBook()
 
 

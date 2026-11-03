@@ -150,3 +150,6 @@ A: One program and one container is simpler to deploy and debug at this stage. I
 
 **Q: How do you monitor latency?**
 A: With the median and the 95th percentile, not the average, because a few slow requests (for example a rate-limit retry that took 57 seconds) drag the average far above what users normally experience. My live log is kept apart from test runs, so the numbers describe real use.
+
+**Q: How do you use user feedback?**
+A: The page has thumbs up and down buttons that save to the logbook. I review the thumbs-down answers, turn the failures into new test questions, and fix the cause. Using the page myself also found a problem my exams could not see: a correct answer that listed unrelated products. I changed the prompt to keep answers focused and checked that accuracy did not drop and output tokens did.

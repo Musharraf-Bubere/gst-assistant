@@ -13,6 +13,7 @@ load_dotenv()
 
 RETRIES = 2
 WAIT_SECONDS = 20
+RETRYABLE = (429, 503)
 
 
 @dataclass
@@ -22,9 +23,6 @@ class LLMResponse:
     tokens_out: int
 
 
-RETRYABLE = (429, 503)
-
-
 def is_retryable(error):
     """True for rate limits (429) and temporary outages (503)."""
     code = getattr(error, "code", None)
@@ -32,26 +30,28 @@ def is_retryable(error):
 
 
 class GeminiLLM:
-    def __init__(self):
+    def __init__(self, retries=RETRIES, wait_seconds=WAIT_SECONDS):
         from google import genai
 
         self.client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
         self.model = os.environ["GEMINI_MODEL"]
+        self.retries = retries
+        self.wait_seconds = wait_seconds
 
     def generate(self, system, prompt):
         from google.genai import types
 
         config = types.GenerateContentConfig(system_instruction=system, temperature=0)
-        for attempt in range(RETRIES + 1):
+        for attempt in range(self.retries + 1):
             try:
                 response = self.client.models.generate_content(
                     model=self.model, contents=prompt, config=config
                 )
                 break
             except Exception as error:
-                if not is_retryable(error) or attempt == RETRIES:
+                if not is_retryable(error) or attempt == self.retries:
                     raise
-                time.sleep(WAIT_SECONDS)
+                time.sleep(self.wait_seconds)
         usage = response.usage_metadata
         tokens_in = getattr(usage, "prompt_token_count", 0) or 0
         answer_tokens = getattr(usage, "candidates_token_count", 0) or 0
@@ -66,6 +66,7 @@ class GeminiLLM:
 PROVIDERS = {"gemini": GeminiLLM}
 
 
-def get_llm():
+def get_llm(**options):
+    """options (for example retries=1) are passed to the provider's class."""
     name = os.environ.get("LLM_PROVIDER", "gemini")
-    return PROVIDERS[name]()
+    return PROVIDERS[name](**options)

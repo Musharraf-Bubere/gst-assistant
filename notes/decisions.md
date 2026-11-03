@@ -386,3 +386,12 @@ Add a new entry whenever I choose between options or change a decision.
 - The first report showed an average of 16 s and a maximum of 57 s, which hid the typical 2 s. The log mixed old code versions, rate-limit waits and retries.
 - Now: median, 95th percentile, slowest, plus feedback counts.
 - Test logs and live logs must be separate files.
+
+## D59. First real use of the page (Oct 2026)
+- The Streamlit page works: coloured status, sources box, thumbs up and down. Report after use: median 2,083 ms, 6 thumbs up and 4 thumbs down.
+- Problem found by looking, not by the exams: the answer for "makhan" was correct but listed unrelated products (cocoa butter, butter-knives) because of the "explain each case" rule and 8 cards. Exams check the cited card and value, not focus.
+- Fix: prompt says to answer only about the product asked, use several cards only for the same product under different conditions, at most four lines. Check: accuracy on hard and fresh2 unchanged, output tokens lower.
+
+## D60. Fail fast for users (Oct 2026)
+- Two of 22 requests took about 57 s, from retry waits. The retry count and wait are now chosen per caller: the page and API use one retry with a 3 s wait; exams keep the long waits.
+- Still to do: a hard timeout on the model call.
