@@ -1,0 +1,12 @@
+.venv
+.git
+.env
+__pycache__
+*.pyc
+data/raw
+data/*.db
+data/processed/vectors.npy
+eval
+notes
+scripts
+*.png

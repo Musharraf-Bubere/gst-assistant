@@ -153,3 +153,6 @@ A: With the median and the 95th percentile, not the average, because a few slow 
 
 **Q: How do you use user feedback?**
 A: The page has thumbs up and down buttons that save to the logbook. I review the thumbs-down answers, turn the failures into new test questions, and fix the cause. Using the page myself also found a problem my exams could not see: a correct answer that listed unrelated products. I changed the prompt to keep answers focused and checked that accuracy did not drop and output tokens did.
+
+**Q: How did you containerize it, and what did you keep out?**
+A: A slim Python image with uv installing the exact locked versions, then only the app and the processed records. The embedding model and vector file are created at build time so start-up is quick. The API key is injected at run time, not baked into the image, and .dockerignore keeps .env, logs, PDFs and tests out. Logs inside the container are ephemeral, so a real deployment needs a volume or a database.

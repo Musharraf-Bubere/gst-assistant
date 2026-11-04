@@ -395,3 +395,13 @@ Add a new entry whenever I choose between options or change a decision.
 ## D60. Fail fast for users (Oct 2026)
 - Two of 22 requests took about 57 s, from retry waits. The retry count and wait are now chosen per caller: the page and API use one retry with a 3 s wait; exams keep the long waits.
 - Still to do: a hard timeout on the model call.
+
+## D61. Focused prompt: same accuracy, much shorter (Oct 2026)
+- hard 16/16 and fresh2 10/10 unchanged. Output tokens: hard 1,693 to 1,183 (-30%), fresh2 1,368 to 676 (-51%). Input tokens +2.5 to 4%.
+- Thumbs-down review: 2 of 4 were long answers (fixed), 1 was the services coverage gap, 1 was a thumbs-down on a correct answer, so a bare thumbs-down is ambiguous. Backlog: ask for a reason (wrong, too long, not covered, other).
+- Not-found messages now state the scope: goods only (9/2025 and 10/2025), services not yet included.
+
+## D62. Container image (Oct 2026)
+- Dockerfile: python 3.13 slim plus uv, exact versions from uv.lock, app and records only. The embedding model and the vector file are built at image build time so start-up is fast.
+- Secrets are passed at run time (--env-file locally, the host's secret settings when deployed), never baked into the image. .env, logs, PDFs, tests and notes are excluded by .dockerignore.
+- Known limit: the log database lives inside the container and is lost when it is removed. Real deployment needs a volume or a hosted database.
