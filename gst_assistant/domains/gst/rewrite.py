@@ -1,5 +1,9 @@
 """Ask the language model to restate a question in the words the notifications use."""
 
+import logging
+
+logger = logging.getLogger("gst")
+
 REWRITE_SYSTEM = """You help a search engine for Indian GST notifications.
 Rewrite the question so it contains the plain English product names used in the notifications.
 Rules:
@@ -40,7 +44,8 @@ def rewrite_query(question, llm):
         return _cache[key], 0, 0
     try:
         result = llm.generate(REWRITE_SYSTEM, "Question: " + question)
-    except Exception:
+    except Exception as error:
+        logger.warning("rewrite model call failed: %s", error)
         return question, 0, 0
     text = clean_rewrite(result.text)
     if not text or len(text) > MAX_LENGTH:

@@ -1,5 +1,6 @@
 """Answer a GST question from retrieved records, with guards and citations."""
 import json
+import logging
 import time
 from dataclasses import dataclass, field
 
@@ -15,6 +16,8 @@ from gst_assistant.domains.gst.guards import (
     check_similarity,
 )
 from gst_assistant.domains.gst.rewrite import rewrite_query
+
+logger = logging.getLogger("gst")
 
 SYSTEM_PROMPT = """You are a GST assistant for Indian tax professionals.
 Answer ONLY from the cards below. Each card has an id.
@@ -166,6 +169,7 @@ def answer_without_log(question, searcher, llm, top_k, mode):
     try:
         result = llm.generate(SYSTEM_PROMPT, prompt)
     except Exception as error:
+        logger.warning("answer model call failed: %s", error)
         return Answer(
             "error", BUSY, retrieved_ids, tokens_in=rewrite_in, tokens_out=rewrite_out,
             search_ms=search_ms, rewrite_ms=rewrite_ms, raw_text=str(error)[:300],

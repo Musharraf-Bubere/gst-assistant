@@ -1,6 +1,12 @@
 """A simple web page for the GST assistant."""
 import streamlit as st
 
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger("google_genai").setLevel(logging.WARNING)
+
 from gst_assistant.core.llm import get_llm
 from gst_assistant.core.logbook import LogBook
 from gst_assistant.domains.gst.answer import Searcher, answer_question, load_records
@@ -60,7 +66,7 @@ if answer:
                         + "\n\n" + record["hsn_text"] + ": " + record["description"][:300]
                     )
 
-    if answer.request_id:
+    if answer.request_id and answer.status != "error":
         if st.session_state.get("feedback_given"):
             st.caption("Thank you for the feedback.")
         else:

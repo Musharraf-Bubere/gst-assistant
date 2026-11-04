@@ -405,3 +405,13 @@ Add a new entry whenever I choose between options or change a decision.
 - Dockerfile: python 3.13 slim plus uv, exact versions from uv.lock, app and records only. The embedding model and the vector file are built at image build time so start-up is fast.
 - Secrets are passed at run time (--env-file locally, the host's secret settings when deployed), never baked into the image. .env, logs, PDFs, tests and notes are excluded by .dockerignore.
 - Known limit: the log database lives inside the container and is lost when it is removed. Real deployment needs a volume or a hosted database.
+
+## D63. Container works; the first run failed and exposed a debugging gap (Oct 2026)
+- Image built in 220 s. The longest step (123 s) downloads the embedding model and builds the vector file at build time, so containers start fast.
+- First run showed the user-facing "busy" message with no technical reason anywhere. Docker --env-file keeps quotes literally, unlike python-dotenv, which is the likely cause. Checks: docker ps, an env check without printing the key, and the local LLM test.
+- Fix: log the technical error (answer and rewrite calls) with the logging module while the user sees a friendly message. Feedback buttons are hidden on errors.
+
+## D64. Root cause of the container failure (Oct 2026)
+- Docker --env-file keeps quote marks; python-dotenv strips them. The container sent the API key and the model name with literal quotes, and Google answered 400 API_KEY_INVALID. The log line added earlier showed it immediately.
+- Fixes: unquoted values in .env, and read_env() in the code strips spaces and quotes (hosting services' secret fields often get pasted with quotes). A missing key or model now raises a clear error.
+- Safety: the container is published to 127.0.0.1 only. The app has no login and spends the key's quota, so the real deployment needs a request limit and a spending cap.

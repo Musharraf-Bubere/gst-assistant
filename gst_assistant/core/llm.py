@@ -15,6 +15,9 @@ RETRIES = 2
 WAIT_SECONDS = 20
 RETRYABLE = (429, 503)
 
+def read_env(name, default=""):
+    """Read a setting and remove spaces and stray quote marks (a common copy and paste mistake)."""
+    return os.environ.get(name, default).strip().strip("\"'")
 
 @dataclass
 class LLMResponse:
@@ -33,8 +36,11 @@ class GeminiLLM:
     def __init__(self, retries=RETRIES, wait_seconds=WAIT_SECONDS):
         from google import genai
 
-        self.client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
-        self.model = os.environ["GEMINI_MODEL"]
+        api_key = read_env("GEMINI_API_KEY")
+        self.model = read_env("GEMINI_MODEL")
+        if not api_key or not self.model:
+            raise RuntimeError("GEMINI_API_KEY and GEMINI_MODEL must be set")
+        self.client = genai.Client(api_key=api_key)
         self.retries = retries
         self.wait_seconds = wait_seconds
 
@@ -68,5 +74,5 @@ PROVIDERS = {"gemini": GeminiLLM}
 
 def get_llm(**options):
     """options (for example retries=1) are passed to the provider's class."""
-    name = os.environ.get("LLM_PROVIDER", "gemini")
+    name = read_env("LLM_PROVIDER", "gemini")
     return PROVIDERS[name](**options)

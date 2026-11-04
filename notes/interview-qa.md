@@ -156,3 +156,9 @@ A: The page has thumbs up and down buttons that save to the logbook. I review th
 
 **Q: How did you containerize it, and what did you keep out?**
 A: A slim Python image with uv installing the exact locked versions, then only the app and the processed records. The embedding model and vector file are created at build time so start-up is quick. The API key is injected at run time, not baked into the image, and .dockerignore keeps .env, logs, PDFs and tests out. Logs inside the container are ephemeral, so a real deployment needs a volume or a database.
+
+**Q: A deployment works on your laptop but fails in the container. How do you debug it?**
+A: First separate the cause: is the container running on the right port, what environment does it actually see (without printing secrets), and does the same call work outside the container? Docker's --env-file keeps quote marks literally while python-dotenv strips them, which is a classic difference. I also made the app log the technical error to the console while showing the user a friendly message, so a failure always leaves a trace.
+
+**Q: What was the most confusing bug in deployment?**
+A: The app worked locally but showed a generic "busy" message in Docker. I added logging of the real error and found a 400 "API key not valid". The cause was quote marks in my .env file: python-dotenv strips them locally, but Docker's --env-file passes them literally. I fixed the file, made the code strip stray quotes and raise a clear error if settings are missing, and I now check the environment the container actually sees, without printing secrets.
