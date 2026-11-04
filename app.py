@@ -38,7 +38,13 @@ answer = st.session_state.get("answer")
 if answer:
     if answer.status == "answered":
         st.success(answer.text)
-    elif answer.status in ("not_found", "refused"):
+    elif answer.status == "not_found":
+        st.warning(
+            answer.text
+            + "\n\nI currently cover goods only (notifications 9/2025 and 10/2025). "
+            "Services are not included yet."
+        )
+    elif answer.status == "refused":
         st.warning(answer.text)
     else:
         st.error(answer.text)
