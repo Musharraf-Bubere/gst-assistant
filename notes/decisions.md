@@ -415,3 +415,8 @@ Add a new entry whenever I choose between options or change a decision.
 - Docker --env-file keeps quote marks; python-dotenv strips them. The container sent the API key and the model name with literal quotes, and Google answered 400 API_KEY_INVALID. The log line added earlier showed it immediately.
 - Fixes: unquoted values in .env, and read_env() in the code strips spaces and quotes (hosting services' secret fields often get pasted with quotes). A missing key or model now raises a clear error.
 - Safety: the container is published to 127.0.0.1 only. The app has no login and spends the key's quota, so the real deployment needs a request limit and a spending cap.
+
+## D65. Deployment preparation (Oct 2026)
+- Target: Hugging Face Docker Space. Config lives in the README front matter (sdk docker, app_port 8501). The container runs as user 1000, so the image is built as that user and the page starts from the installed program without uv.
+- A public page with no login spends my API quota. Guards: separate key for the Space with no billing attached, a request limiter (10 per 10 minutes per session, 120 per hour in total), and secrets set in the host's settings, never in the image or the repository.
+- Known limits for the README: ephemeral logs, no authentication, and the limiter is a cost guard, not real security.

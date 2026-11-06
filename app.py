@@ -1,15 +1,16 @@
 """A simple web page for the GST assistant."""
+import logging
+
 import streamlit as st
 
-import logging
+from gst_assistant.core.llm import get_llm
+from gst_assistant.core.logbook import LogBook
+from gst_assistant.core.ratelimit import RateLimiter
+from gst_assistant.domains.gst.answer import Searcher, answer_question, load_records
 
 logging.basicConfig(level=logging.INFO)
 logging.getLogger("httpx").setLevel(logging.WARNING)
 logging.getLogger("google_genai").setLevel(logging.WARNING)
-
-from gst_assistant.core.llm import get_llm
-from gst_assistant.core.logbook import LogBook
-from gst_assistant.domains.gst.answer import Searcher, answer_question, load_records
 
 st.set_page_config(page_title="GST Assistant", page_icon="🧾")
 
@@ -18,10 +19,11 @@ st.set_page_config(page_title="GST Assistant", page_icon="🧾")
 def load_app():
     records = load_records()
     by_id = {record["id"]: record for record in records}
-    return Searcher(records), get_llm(retries=1, wait_seconds=3), LogBook(), by_id
+    llm = get_llm(retries=1, wait_seconds=3)
+    return Searcher(records), llm, LogBook(), by_id, RateLimiter(120, 3600)
 
 
-searcher, llm, logbook, by_id = load_app()
+searcher, llm, logbook, by_id, global_limiter = load_app()
 
 st.title("GST Assistant")
 st.caption(
@@ -36,9 +38,13 @@ question = st.text_input(
 )
 
 if st.button("Ask") and question.strip():
-    with st.spinner("Looking through the notifications..."):
-        st.session_state["answer"] = answer_question(question, searcher, llm, logbook=logbook)
-    st.session_state["feedback_given"] = False
+    session_limiter = st.session_state.setdefault("limiter", RateLimiter(10, 600))
+    if not session_limiter.allow() or not global_limiter.allow():
+        st.warning("Too many questions right now. Please wait a few minutes and try again.")
+    else:
+        with st.spinner("Looking through the notifications..."):
+            st.session_state["answer"] = answer_question(question, searcher, llm, logbook=logbook)
+        st.session_state["feedback_given"] = False
 
 answer = st.session_state.get("answer")
 if answer:
