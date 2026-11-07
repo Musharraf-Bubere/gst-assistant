@@ -9,7 +9,7 @@ ENV HOME=/home/user \
     UV_COMPILE_BYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     FASTEMBED_CACHE_PATH=/home/user/.fastembed
-RUN mkdir -p /home/user/app/data/processed
+RUN mkdir -p /home/user/app/data/processed /home/user/logs
 WORKDIR /home/user/app
 
 COPY --chown=user pyproject.toml uv.lock .python-version README.md ./
@@ -24,4 +24,4 @@ RUN uv run --no-sync python -c "from gst_assistant.domains.gst.answer import Sea
 
 EXPOSE 8501
 
-CMD [".venv/bin/streamlit", "run", "app.py", "--server.address=0.0.0.0", "--server.port=8501", "--server.headless=true", "--browser.gatherUsageStats=false"]
+CMD exec .venv/bin/streamlit run app.py --server.address=0.0.0.0 --server.port=${PORT:-8501} --server.headless=true --browser.gatherUsageStats=false

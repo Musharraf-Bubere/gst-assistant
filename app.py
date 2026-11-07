@@ -40,6 +40,7 @@ question = st.text_input(
 if st.button("Ask") and question.strip():
     session_limiter = st.session_state.setdefault("limiter", RateLimiter(10, 600))
     if not session_limiter.allow() or not global_limiter.allow():
+        st.session_state.pop("answer", None)
         st.warning("Too many questions right now. Please wait a few minutes and try again.")
     else:
         with st.spinner("Looking through the notifications..."):

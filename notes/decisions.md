@@ -420,3 +420,14 @@ Add a new entry whenever I choose between options or change a decision.
 - Target: Hugging Face Docker Space. Config lives in the README front matter (sdk docker, app_port 8501). The container runs as user 1000, so the image is built as that user and the page starts from the installed program without uv.
 - A public page with no login spends my API quota. Guards: separate key for the Space with no billing attached, a request limiter (10 per 10 minutes per session, 120 per hour in total), and secrets set in the host's settings, never in the image or the repository.
 - Known limits for the README: ephemeral logs, no authentication, and the limiter is a cost guard, not real security.
+
+## D66. Deploy a clean copy to a Hugging Face Docker Space (Oct 2026)
+- The Space gets only what the app needs (README with front matter, Dockerfile, lock files, app, package, records.json), all text. PDFs, images, notes and tests stay in the GitHub repo. Reason: Hugging Face can reject pushes with binary files, and the running app does not need them.
+- Secrets (API key and model name) are set in the Space settings, never in the repository or the image. The Space uses a separate Gemini key with no billing attached, so abuse can at worst exhaust the free quota.
+- Limiter result: 10 per 10 minutes per visitor and 120 per hour overall worked locally; a blocked request now clears the old answer.
+
+## D67. Render instead of Hugging Face; Compose for local use (Oct 2026)
+- Hugging Face Spaces turned out not to be free for this use. Render is the target. Render free web service (current docs): 512 MB RAM, 0.1 CPU, spins down after 15 minutes without traffic, about a minute to wake, 750 free hours a month.
+- The app's memory is unmeasured, and it loads an embedding model, Streamlit and pandas. Decision by measurement: run it under docker compose with Render's limits (mem_limit 512m, cpus 0.1) and check OOMKilled and speed.
+- docker-compose.yml: named project (a play button in Docker Desktop), localhost-only port, settings from .env, a named volume for the log file only (LOG_DB_PATH), restart "no". The page reads the PORT variable that Render sets.
+- Next: if it fits, deploy free and document the sleep behaviour. If not: a bigger instance, or slimming the app (hosted embeddings, lighter page), then re-run the evaluations.

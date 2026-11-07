@@ -162,3 +162,6 @@ A: First separate the cause: is the container running on the right port, what en
 
 **Q: What was the most confusing bug in deployment?**
 A: The app worked locally but showed a generic "busy" message in Docker. I added logging of the real error and found a 400 "API key not valid". The cause was quote marks in my .env file: python-dotenv strips them locally, but Docker's --env-file passes them literally. I fixed the file, made the code strip stray quotes and raise a clear error if settings are missing, and I now check the environment the container actually sees, without printing secrets.
+
+**Q: How did you decide where to deploy?**
+A: I read the free tier limits (512 MB RAM, 0.1 CPU, sleeps after 15 minutes) and, instead of assuming, simulated those limits locally with Docker Compose resource limits to see whether my app, which loads an embedding model, survives them. If it doesn't, the options are a larger instance or a slimmer architecture such as hosted embeddings, and I'd re-run my evaluations after changing anything that affects retrieval.

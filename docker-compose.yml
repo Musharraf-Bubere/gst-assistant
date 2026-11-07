@@ -1,0 +1,25 @@
+name: gst-assistant
+
+services:
+  app:
+    build: .
+    image: gst-assistant:latest
+    container_name: gst-assistant
+    ports:
+      - "127.0.0.1:8501:8501"
+    env_file:
+      - .env
+    environment:
+      LOG_DB_PATH: /home/user/logs/logs.db
+    volumes:
+      - gst-logs:/home/user/logs
+    restart: "no"
+    healthcheck:
+      test: ["CMD", "/home/user/app/.venv/bin/python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8501/_stcore/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  gst-logs:

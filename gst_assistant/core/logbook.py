@@ -1,10 +1,11 @@
 """Log every question and answer to a small SQLite database."""
+import os
 import json
 import sqlite3
 import threading
 from datetime import datetime, timezone
 
-DEFAULT_PATH = "data/logs.db"
+DEFAULT_PATH = os.environ.get("LOG_DB_PATH", "data/logs.db")
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS requests (
